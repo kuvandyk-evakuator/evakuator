@@ -1,22 +1,25 @@
-exports.handler = async function(event, context) {
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Content-Type': 'application/json'
-  };
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
 
-  if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' };
-  if (event.httpMethod !== 'POST') return { statusCode: 405, headers, body: 'Method Not Allowed' };
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
 
   try {
-    const data = JSON.parse(event.body);
+    const data = req.body;
     const BOT_TOKEN = process.env.BOT_TOKEN;
+
     if (!BOT_TOKEN) {
-      return { statusCode: 500, headers, body: JSON.stringify({ ok: false, description: 'Server env vars missing' }) };
+      return res.status(500).json({ ok: false, description: 'Server env vars missing' });
     }
 
-    const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerCallbackQuery`, {
+    const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerCallbackQuery`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -24,10 +27,10 @@ exports.handler = async function(event, context) {
         text: data.text
       })
     });
-    const result = await res.json();
+    const result = await response.json();
 
-    return { statusCode: 200, headers, body: JSON.stringify(result) };
+    return res.status(200).json(result);
   } catch (err) {
-    return { statusCode: 500, headers, body: JSON.stringify({ ok: false, description: err.message }) };
+    return res.status(500).json({ ok: false, description: err.message });
   }
-};
+}
