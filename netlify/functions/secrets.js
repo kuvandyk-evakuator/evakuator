@@ -1,4 +1,13 @@
 exports.handler = async function(event, context) {
+  // Проверяем, что запрос пришёл с нашего сайта
+  const referer = event.headers.referer || event.headers.origin || '';
+  if (!referer.includes('kuvandyk-evakuator.netlify.app') && !referer.includes('localhost')) {
+    return {
+      statusCode: 403,
+      body: JSON.stringify({ error: 'Access denied' })
+    };
+  }
+
   return {
     statusCode: 200,
     headers: { 'Content-Type': 'application/json' },
