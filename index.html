@@ -1,3 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Эвакуатор Валдай | Кувандык</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0B1A2F; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 16px; color: #E0E8F0; }
+    .app { width: 100%; max-width: 400px; background: #102B3F; border-radius: 32px; padding: 20px 16px 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: 24px; }
+    .logo { text-align: center; font-size: 1.7rem; font-weight: 700; letter-spacing: 0.5px; color: #F2A900; text-shadow: 0 2px 6px rgba(0,0,0,0.6); line-height: 1.3; }
+    .logo small { display: block; font-size: 0.9rem; font-weight: 400; color: #9FB3C8; letter-spacing: 0.3px; }
+    .section { display: flex; flex-direction: column; gap: 10px; position: relative; }
+    .label { font-weight: 600; font-size: 1rem; color: #BCCCDC; margin-bottom: 2px; }
+    input, select { background: #1E4058; border: 1px solid #2D5A77; border-radius: 16px; padding: 14px 16px; font-size: 1rem; color: white; outline: none; transition: 0.2s; width: 100%; }
+    input::placeholder { color: #7B9BB2; }
+    input:focus, select:focus { border-color: #F2A900; box-shadow: 0 0 0 3px rgba(242,169,0,0.25); }
+    .row-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+    .btn-option { flex: 1 1 auto; background: #1A3A4E; border: 2px solid #2D5A77; border-radius: 16px; padding: 14px 12px; font-size: 0.95rem; font-weight: 600; color: #CBD5E1; text-align: center; cursor: pointer; transition: all 0.2s; min-width: 80px; }
+    .btn-option.active { background: #F2A900; border-color: #F2A900; color: #0B1A2F; font-weight: 700; }
+    .btn-primary { background: #F2A900; color: #0B1A2F; font-weight: bold; padding: 16px; border: none; border-radius: 20px; font-size: 1.2rem; cursor: pointer; width: 100%; transition: 0.2s; }
+    .btn-primary:disabled { background: #555; color: #999; cursor: not-allowed; opacity: 0.7; }
+    .btn-secondary { background: #1E4058; color: #F2A900; font-weight: bold; padding: 14px; border: 2px solid #F2A900; border-radius: 20px; font-size: 1rem; cursor: pointer; width: 100%; margin-top: 4px; }
+    .hidden { display: none !important; }
+    .sub-group { margin-top: 8px; display: flex; flex-direction: column; gap: 10px; padding-left: 8px; border-left: 3px solid #F2A900; }
+    .counter-select { width: 70px; text-align: center; }
+    .timer-overlay { background: #0D2137; border: 2px solid #F2A900; border-radius: 20px; padding: 20px; text-align: center; margin-top: 16px; }
+    .timer-number { font-size: 3rem; font-weight: 800; color: #F2A900; }
+    .timer-text { color: #BCCCDC; margin-top: 4px; }
+    .price-block { background: #0A2F1F; border: 2px solid #2ECC71; border-radius: 24px; padding: 24px; text-align: center; margin-top: 16px; }
+    .price-amount { font-size: 2.5rem; font-weight: 800; color: #FFFFFF; }
+    .price-breakdown { color: #BCCCDC; font-size: 0.9rem; margin-top: 8px; text-align: left; }
+    .btn-success { background: #2ECC71; color: white; font-weight: bold; padding: 16px; border: none; border-radius: 20px; font-size: 1.1rem; cursor: pointer; width: 100%; margin-top: 8px; }
+    .btn-danger { background: #E74C3C; color: white; font-weight: bold; padding: 16px; border: none; border-radius: 20px; font-size: 1.1rem; cursor: pointer; width: 100%; margin-top: 8px; }
+    .suggestions-list { position: absolute; top: 100%; left: 0; right: 0; background: #1A3A4E; border: 1px solid #2D5A77; border-radius: 0 0 16px 16px; max-height: 200px; overflow-y: auto; z-index: 100; list-style: none; }
+    .suggestions-list li { padding: 12px 16px; cursor: pointer; color: #CBD5E1; border-bottom: 1px solid #2D5A77; font-size: 0.9rem; }
+    .suggestions-list li:last-child { border-bottom: none; border-radius: 0 0 16px 16px; }
+    .suggestions-list li:hover { background: #F2A900; color: #0B1A2F; }
+    .distance-display { background: #1A3A4E; border-radius: 16px; padding: 12px; text-align: center; color: #F2A900; font-weight: bold; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <div class="logo">
+      🚛 Эвакуатор Валдай<br><small>Кувандык · до 5 тонн</small>
+    </div>
+
+    <div id="formContainer">
+      <div class="section">
+        <div class="label">👤 Ваше имя</div>
+        <input type="text" id="customerName" placeholder="Иван Иванов" autocomplete="name">
+      </div>
+      <div class="section">
+        <div class="label">📞 Телефон</div>
+        <input type="tel" id="customerPhone" placeholder="+7 (___) ___-__-__" autocomplete="tel-national">
+      </div>
+      <div class="section">
+        <div class="label">🚨 Ситуация</div>
+        <div class="row-buttons" id="situationGroup">
+          <div class="btn-option" data-value="ДТП">ДТП</div>
+          <div class="btn-option" data-value="Поломка">Поломка</div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="label">📍 Перевозка</div>
+        <div class="row-buttons" id="transportTypeGroup">
+          <div class="btn-option" data-value="По городу">По городу</div>
+          <div class="btn-option" data-value="За город">За город</div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="label">🚗 Тип транспортного средства</div>
+        <div class="row-buttons" id="vehicleTypeGroup">
+          <div class="btn-option" data-value="Легковой">Легковой</div>
+          <div class="btn-option" data-value="Кроссовер">Кроссовер</div>
+          <div class="btn-option" data-value="Внедорожник">Внедорожник</div>
+          <div class="btn-option" data-value="Легкий коммерческий">Коммерческий</div>
+          <div class="btn-option" data-value="Трактор">Трактор</div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="label">🚙 Положение авто</div>
+        <div class="row-buttons" id="positionGroup">
+          <div class="btn-option" data-value="На дороге">На дороге</div>
+          <div class="btn-option" data-value="В кювете">В кювете</div>
+          <div class="btn-option" data-value="На боку">На боку</div>
+          <div class="btn-option" data-value="На крыше">На крыше</div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="label">🔧 Неисправность</div>
+        <div class="row-buttons" id="damageGroup">
+          <div class="btn-option" data-value="Ходовая часть">Ходовая</div>
+          <div class="btn-option" data-value="Двигатель">Двигатель</div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="label">🛞 Колёса крутятся?</div>
+        <div class="row-buttons" id="wheelsRollGroup">
+          <div class="btn-option" data-value="Да">Да</div>
+          <div class="btn-option" data-value="Нет">Нет</div>
+        </div>
+        <div id="blockedWheelsBlock" class="sub-group hidden">
+          <div class="label">🔒 Заблокировано колёс</div>
+          <input type="number" id="blockedWheelsCount" min="1" max="4" value="1" class="counter-select">
+        </div>
+      </div>
+      <div class="section">
+        <div class="label">⚙️ Коробка передач</div>
+        <div class="row-buttons" id="gearboxGroup">
+          <div class="btn-option" data-value="Механика">Механика</div>
+          <div class="btn-option" data-value="Автомат">Автомат</div>
+          <div class="btn-option" data-value="Робот">Робот</div>
+          <div class="btn-option" data-value="Вариатор">Вариатор</div>
+        </div>
+        <div id="neutralBlock" class="sub-group hidden">
+          <div class="label">⚡ Встаёт на нейтраль?</div>
+          <div class="row-buttons" id="neutralGroup">
+            <div class="btn-option" data-value="Да">Да</div>
+            <div class="btn-option" data-value="Нет">Нет</div>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="label">🪝 Буксировочное устройство</div>
+        <div class="row-buttons" id="towHookGroup">
+          <div class="btn-option" data-value="Есть крючок">Крючок</div>
+          <div class="btn-option" data-value="Есть петля">Петля</div>
+          <div class="btn-option" data-value="Нет ничего">Нет ничего</div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="label">⏱️ Время подачи</div>
+        <div class="row-buttons" id="timeGroup">
+          <div class="btn-option" data-value="Как можно быстрее">Срочно</div>
+          <div class="btn-option" data-value="Ко времени">Ко времени</div>
+          <div class="btn-option" data-value="По записи">По записи</div>
+        </div>
+        <div id="customTimeBlock" class="sub-group hidden">
+          <input type="time" id="customTimeInput">
+        </div>
+      </div>
+      <div class="section" id="fromSection">
+        <div class="label">📍 Откуда (адрес подачи)</div>
+        <input type="text" id="addressFrom" placeholder="Начните вводить адрес..." autocomplete="off">
+        <ul class="suggestions-list hidden" id="fromSuggestions"></ul>
+      </div>
+      <div class="section" id="toSection">
+        <div class="label">📌 Куда (адрес доставки)</div>
+        <input type="text" id="addressTo" placeholder="Начните вводить адрес..." autocomplete="off">
+        <ul class="suggestions-list hidden" id="toSuggestions"></ul>
+      </div>
+      <button class="btn-secondary" id="calcDistanceBtn">🗺️ Рассчитать расстояние</button>
+      <div id="distanceDisplay" class="distance-display hidden">
+        ✅ Расстояние: <span id="distanceValue">0</span> км
+      </div>
+      <div id="distanceLoading" class="hidden" style="text-align:center;color:#F2A900;">⏳ Считаем маршрут...</div>
+      <button class="btn-primary" id="calcPriceBtn" disabled>🔍 Сначала рассчитайте расстояние</button>
+    </div>
+
+    <div id="timerBlock" class="timer-overlay hidden">
+      <div class="timer-number" id="timerCount">...</div>
+      <div class="timer-text" id="timerStatus">Отправляем заказ...</div>
+    </div>
+
+    <div id="finalPriceBlock" class="hidden"></div>
+  </div>
 <script>
   (function() {
     // ===== НАСТРОЙКИ =====
@@ -402,4 +569,4 @@
       });
     }
   })();
-</script>
+</script> 
