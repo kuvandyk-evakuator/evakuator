@@ -5,12 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <title>Эвакуатор Валдай | Кувандык</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: #0B1A2F;
       font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -21,7 +16,6 @@
       padding: 16px;
       color: #E0E8F0;
     }
-
     .app {
       width: 100%;
       max-width: 400px;
@@ -33,7 +27,6 @@
       flex-direction: column;
       gap: 24px;
     }
-
     .logo {
       text-align: center;
       font-size: 1.7rem;
@@ -43,28 +36,9 @@
       text-shadow: 0 2px 6px rgba(0,0,0,0.6);
       line-height: 1.3;
     }
-    .logo small {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 400;
-      color: #9FB3C8;
-      letter-spacing: 0.3px;
-    }
-
-    .section {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      position: relative;
-    }
-
-    .label {
-      font-weight: 600;
-      font-size: 1rem;
-      color: #BCCCDC;
-      margin-bottom: 2px;
-    }
-
+    .logo small { display: block; font-size: 0.9rem; font-weight: 400; color: #9FB3C8; letter-spacing: 0.3px; }
+    .section { display: flex; flex-direction: column; gap: 10px; position: relative; }
+    .label { font-weight: 600; font-size: 1rem; color: #BCCCDC; margin-bottom: 2px; }
     input, select {
       background: #1E4058;
       border: 1px solid #2D5A77;
@@ -76,20 +50,12 @@
       transition: 0.2s;
       width: 100%;
     }
-    input::placeholder {
-      color: #7B9BB2;
-    }
+    input::placeholder { color: #7B9BB2; }
     input:focus, select:focus {
       border-color: #F2A900;
       box-shadow: 0 0 0 3px rgba(242,169,0,0.25);
     }
-
-    .row-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
+    .row-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
     .btn-option {
       flex: 1 1 auto;
       background: #1A3A4E;
@@ -104,13 +70,7 @@
       transition: all 0.2s;
       min-width: 80px;
     }
-    .btn-option.active {
-      background: #F2A900;
-      border-color: #F2A900;
-      color: #0B1A2F;
-      font-weight: 700;
-    }
-
+    .btn-option.active { background: #F2A900; border-color: #F2A900; color: #0B1A2F; font-weight: 700; }
     .btn-primary {
       background: #F2A900;
       color: #0B1A2F;
@@ -123,13 +83,7 @@
       width: 100%;
       transition: 0.2s;
     }
-    .btn-primary:disabled {
-      background: #555;
-      color: #999;
-      cursor: not-allowed;
-      opacity: 0.7;
-    }
-
+    .btn-primary:disabled { background: #555; color: #999; cursor: not-allowed; opacity: 0.7; }
     .btn-secondary {
       background: #1E4058;
       color: #F2A900;
@@ -142,88 +96,17 @@
       width: 100%;
       margin-top: 4px;
     }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .sub-group {
-      margin-top: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding-left: 8px;
-      border-left: 3px solid #F2A900;
-    }
-
-    .counter-select {
-      width: 70px;
-      text-align: center;
-    }
-
-    .timer-overlay {
-      background: #0D2137;
-      border: 2px solid #F2A900;
-      border-radius: 20px;
-      padding: 20px;
-      text-align: center;
-      margin-top: 16px;
-    }
-    .timer-number {
-      font-size: 3rem;
-      font-weight: 800;
-      color: #F2A900;
-    }
-    .timer-text {
-      color: #BCCCDC;
-      margin-top: 4px;
-    }
-
-    .price-block {
-      background: #0A2F1F;
-      border: 2px solid #2ECC71;
-      border-radius: 24px;
-      padding: 24px;
-      text-align: center;
-      margin-top: 16px;
-    }
-    .price-amount {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: #FFFFFF;
-    }
-    .price-breakdown {
-      color: #BCCCDC;
-      font-size: 0.9rem;
-      margin-top: 8px;
-      text-align: left;
-    }
-
-    .btn-success {
-      background: #2ECC71;
-      color: white;
-      font-weight: bold;
-      padding: 16px;
-      border: none;
-      border-radius: 20px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 8px;
-    }
-    .btn-danger {
-      background: #E74C3C;
-      color: white;
-      font-weight: bold;
-      padding: 16px;
-      border: none;
-      border-radius: 20px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 8px;
-    }
-
+    .hidden { display: none !important; }
+    .sub-group { margin-top: 8px; display: flex; flex-direction: column; gap: 10px; padding-left: 8px; border-left: 3px solid #F2A900; }
+    .counter-select { width: 70px; text-align: center; }
+    .timer-overlay { background: #0D2137; border: 2px solid #F2A900; border-radius: 20px; padding: 20px; text-align: center; margin-top: 16px; }
+    .timer-number { font-size: 3rem; font-weight: 800; color: #F2A900; }
+    .timer-text { color: #BCCCDC; margin-top: 4px; }
+    .price-block { background: #0A2F1F; border: 2px solid #2ECC71; border-radius: 24px; padding: 24px; text-align: center; margin-top: 16px; }
+    .price-amount { font-size: 2.5rem; font-weight: 800; color: #FFFFFF; }
+    .price-breakdown { color: #BCCCDC; font-size: 0.9rem; margin-top: 8px; text-align: left; }
+    .btn-success { background: #2ECC71; color: white; font-weight: bold; padding: 16px; border: none; border-radius: 20px; font-size: 1.1rem; cursor: pointer; width: 100%; margin-top: 8px; }
+    .btn-danger { background: #E74C3C; color: white; font-weight: bold; padding: 16px; border: none; border-radius: 20px; font-size: 1.1rem; cursor: pointer; width: 100%; margin-top: 8px; }
     .suggestions-list {
       position: absolute;
       top: 100%;
@@ -237,182 +120,55 @@
       z-index: 100;
       list-style: none;
     }
-    .suggestions-list li {
-      padding: 12px 16px;
-      cursor: pointer;
-      color: #CBD5E1;
-      border-bottom: 1px solid #2D5A77;
-      font-size: 0.9rem;
-    }
-    .suggestions-list li:last-child {
-      border-bottom: none;
-      border-radius: 0 0 16px 16px;
-    }
-    .suggestions-list li:hover {
-      background: #F2A900;
-      color: #0B1A2F;
-    }
-
-    .distance-display {
-      background: #1A3A4E;
-      border-radius: 16px;
-      padding: 12px;
-      text-align: center;
-      color: #F2A900;
-      font-weight: bold;
-      font-size: 0.95rem;
-    }
+    .suggestions-list li { padding: 12px 16px; cursor: pointer; color: #CBD5E1; border-bottom: 1px solid #2D5A77; font-size: 0.9rem; }
+    .suggestions-list li:last-child { border-bottom: none; border-radius: 0 0 16px 16px; }
+    .suggestions-list li:hover { background: #F2A900; color: #0B1A2F; }
+    .distance-display { background: #1A3A4E; border-radius: 16px; padding: 12px; text-align: center; color: #F2A900; font-weight: bold; font-size: 0.95rem; }
   </style>
 </head>
 <body>
   <div class="app" id="app">
-    <div class="logo">
-      🚛 Эвакуатор Валдай<br><small>Кувандык · до 5 тонн</small>
-    </div>
-
+    <div class="logo">🚛 Эвакуатор Валдай<br><small>Кувандык · до 5 тонн</small></div>
     <div id="formContainer">
-      <div class="section">
-        <div class="label">👤 Ваше имя</div>
-        <input type="text" id="customerName" placeholder="Иван Иванов" autocomplete="name">
-      </div>
-
-      <div class="section">
-        <div class="label">📞 Телефон</div>
-        <input type="tel" id="customerPhone" placeholder="+7 (___) ___-__-__" autocomplete="tel-national">
-      </div>
-
-      <div class="section">
-        <div class="label">🚨 Ситуация</div>
-        <div class="row-buttons" id="situationGroup">
-          <div class="btn-option" data-value="ДТП">ДТП</div>
-          <div class="btn-option" data-value="Поломка">Поломка</div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="label">📍 Перевозка</div>
-        <div class="row-buttons" id="transportTypeGroup">
-          <div class="btn-option" data-value="По городу">По городу</div>
-          <div class="btn-option" data-value="За город">За город</div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="label">🚗 Тип транспортного средства</div>
-        <div class="row-buttons" id="vehicleTypeGroup">
-          <div class="btn-option" data-value="Легковой">Легковой</div>
-          <div class="btn-option" data-value="Кроссовер">Кроссовер</div>
-          <div class="btn-option" data-value="Внедорожник">Внедорожник</div>
-          <div class="btn-option" data-value="Легкий коммерческий">Коммерческий</div>
-          <div class="btn-option" data-value="Трактор">Трактор</div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="label">🚙 Положение авто</div>
-        <div class="row-buttons" id="positionGroup">
-          <div class="btn-option" data-value="На дороге">На дороге</div>
-          <div class="btn-option" data-value="В кювете">В кювете</div>
-          <div class="btn-option" data-value="На боку">На боку</div>
-          <div class="btn-option" data-value="На крыше">На крыше</div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="label">🔧 Неисправность</div>
-        <div class="row-buttons" id="damageGroup">
-          <div class="btn-option" data-value="Ходовая часть">Ходовая</div>
-          <div class="btn-option" data-value="Двигатель">Двигатель</div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="label">🛞 Колёса крутятся?</div>
-        <div class="row-buttons" id="wheelsRollGroup">
-          <div class="btn-option" data-value="Да">Да</div>
-          <div class="btn-option" data-value="Нет">Нет</div>
-        </div>
-        <div id="blockedWheelsBlock" class="sub-group hidden">
-          <div class="label">🔒 Заблокировано колёс</div>
-          <input type="number" id="blockedWheelsCount" min="1" max="4" value="1" class="counter-select">
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="label">⚙️ Коробка передач</div>
-        <div class="row-buttons" id="gearboxGroup">
-          <div class="btn-option" data-value="Механика">Механика</div>
-          <div class="btn-option" data-value="Автомат">Автомат</div>
-          <div class="btn-option" data-value="Робот">Робот</div>
-          <div class="btn-option" data-value="Вариатор">Вариатор</div>
-        </div>
-        <div id="neutralBlock" class="sub-group hidden">
-          <div class="label">⚡ Встаёт на нейтраль?</div>
-          <div class="row-buttons" id="neutralGroup">
-            <div class="btn-option" data-value="Да">Да</div>
-            <div class="btn-option" data-value="Нет">Нет</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="label">🪝 Буксировочное устройство</div>
-        <div class="row-buttons" id="towHookGroup">
-          <div class="btn-option" data-value="Есть крючок">Крючок</div>
-          <div class="btn-option" data-value="Есть петля">Петля</div>
-          <div class="btn-option" data-value="Нет ничего">Нет ничего</div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="label">⏱️ Время подачи</div>
-        <div class="row-buttons" id="timeGroup">
-          <div class="btn-option" data-value="Как можно быстрее">Срочно</div>
-          <div class="btn-option" data-value="Ко времени">Ко времени</div>
-          <div class="btn-option" data-value="По записи">По записи</div>
-        </div>
-        <div id="customTimeBlock" class="sub-group hidden">
-          <input type="time" id="customTimeInput">
-        </div>
-      </div>
-
-      <div class="section" id="fromSection">
-        <div class="label">📍 Откуда (адрес подачи)</div>
-        <input type="text" id="addressFrom" placeholder="Начните вводить адрес..." autocomplete="off">
-        <ul class="suggestions-list hidden" id="fromSuggestions"></ul>
-      </div>
-
-      <div class="section" id="toSection">
-        <div class="label">📌 Куда (адрес доставки)</div>
-        <input type="text" id="addressTo" placeholder="Начните вводить адрес..." autocomplete="off">
-        <ul class="suggestions-list hidden" id="toSuggestions"></ul>
-      </div>
-
+      <div class="section"><div class="label">👤 Ваше имя</div><input type="text" id="customerName" placeholder="Иван Иванов" autocomplete="name"></div>
+      <div class="section"><div class="label">📞 Телефон</div><input type="tel" id="customerPhone" placeholder="+7 (___) ___-__-__" autocomplete="tel-national"></div>
+      <div class="section"><div class="label">🚨 Ситуация</div><div class="row-buttons" id="situationGroup"><div class="btn-option" data-value="ДТП">ДТП</div><div class="btn-option" data-value="Поломка">Поломка</div></div></div>
+      <div class="section"><div class="label">📍 Перевозка</div><div class="row-buttons" id="transportTypeGroup"><div class="btn-option" data-value="По городу">По городу</div><div class="btn-option" data-value="За город">За город</div></div></div>
+      <div class="section"><div class="label">🚗 Тип транспортного средства</div><div class="row-buttons" id="vehicleTypeGroup"><div class="btn-option" data-value="Легковой">Легковой</div><div class="btn-option" data-value="Кроссовер">Кроссовер</div><div class="btn-option" data-value="Внедорожник">Внедорожник</div><div class="btn-option" data-value="Легкий коммерческий">Коммерческий</div><div class="btn-option" data-value="Трактор">Трактор</div></div></div>
+      <div class="section"><div class="label">🚙 Положение авто</div><div class="row-buttons" id="positionGroup"><div class="btn-option" data-value="На дороге">На дороге</div><div class="btn-option" data-value="В кювете">В кювете</div><div class="btn-option" data-value="На боку">На боку</div><div class="btn-option" data-value="На крыше">На крыше</div></div></div>
+      <div class="section"><div class="label">🔧 Неисправность</div><div class="row-buttons" id="damageGroup"><div class="btn-option" data-value="Ходовая часть">Ходовая</div><div class="btn-option" data-value="Двигатель">Двигатель</div></div></div>
+      <div class="section"><div class="label">🛞 Колёса крутятся?</div><div class="row-buttons" id="wheelsRollGroup"><div class="btn-option" data-value="Да">Да</div><div class="btn-option" data-value="Нет">Нет</div></div><div id="blockedWheelsBlock" class="sub-group hidden"><div class="label">🔒 Заблокировано колёс</div><input type="number" id="blockedWheelsCount" min="1" max="4" value="1" class="counter-select"></div></div>
+      <div class="section"><div class="label">⚙️ Коробка передач</div><div class="row-buttons" id="gearboxGroup"><div class="btn-option" data-value="Механика">Механика</div><div class="btn-option" data-value="Автомат">Автомат</div><div class="btn-option" data-value="Робот">Робот</div><div class="btn-option" data-value="Вариатор">Вариатор</div></div><div id="neutralBlock" class="sub-group hidden"><div class="label">⚡ Встаёт на нейтраль?</div><div class="row-buttons" id="neutralGroup"><div class="btn-option" data-value="Да">Да</div><div class="btn-option" data-value="Нет">Нет</div></div></div></div>
+      <div class="section"><div class="label">🪝 Буксировочное устройство</div><div class="row-buttons" id="towHookGroup"><div class="btn-option" data-value="Есть крючок">Крючок</div><div class="btn-option" data-value="Есть петля">Петля</div><div class="btn-option" data-value="Нет ничего">Нет ничего</div></div></div>
+      <div class="section"><div class="label">⏱️ Время подачи</div><div class="row-buttons" id="timeGroup"><div class="btn-option" data-value="Как можно быстрее">Срочно</div><div class="btn-option" data-value="Ко времени">Ко времени</div><div class="btn-option" data-value="По записи">По записи</div></div><div id="customTimeBlock" class="sub-group hidden"><input type="time" id="customTimeInput"></div></div>
+      <div class="section" id="fromSection"><div class="label">📍 Откуда (адрес подачи)</div><input type="text" id="addressFrom" placeholder="Начните вводить адрес..." autocomplete="off"><ul class="suggestions-list hidden" id="fromSuggestions"></ul></div>
+      <div class="section" id="toSection"><div class="label">📌 Куда (адрес доставки)</div><input type="text" id="addressTo" placeholder="Начните вводить адрес..." autocomplete="off"><ul class="suggestions-list hidden" id="toSuggestions"></ul></div>
       <button class="btn-secondary" id="calcDistanceBtn">🗺️ Рассчитать расстояние</button>
-      <div id="distanceDisplay" class="distance-display hidden">
-        ✅ Расстояние: <span id="distanceValue">0</span> км
-      </div>
+      <div id="distanceDisplay" class="distance-display hidden">✅ Расстояние: <span id="distanceValue">0</span> км</div>
       <div id="distanceLoading" class="hidden" style="text-align:center;color:#F2A900;">⏳ Считаем маршрут...</div>
-
       <button class="btn-primary" id="calcPriceBtn" disabled>🔍 Сначала рассчитайте расстояние</button>
     </div>
-
-    <div id="timerBlock" class="timer-overlay hidden">
-      <div class="timer-number" id="timerCount">60</div>
-      <div class="timer-text" id="timerStatus">секунд. Ожидайте ответ...</div>
-    </div>
-
+    <div id="timerBlock" class="timer-overlay hidden"><div class="timer-number" id="timerCount">60</div><div class="timer-text" id="timerStatus">секунд. Ожидайте ответ...</div></div>
     <div id="finalPriceBlock" class="hidden"></div>
   </div>
 
   <script>
     (function() {
-      // ===== НАСТРОЙКИ =====
-      const BOT_TOKEN = '8815459473:AAEDQj2IbI76Ie1ZAr6Y2jv2DEQkG8WpY3w';
-      const CHAT_ID = '5992703537';
-      const MY_PHONE = '+79010993555';
-      const DADATA_KEY = 'bda7f0f98760ba924daaf3841287ce4ea0ac1aea';
+      // ===== СЕКРЕТЫ ЗАГРУЖАЮТСЯ БЕЗОПАСНО =====
+      async function getSecrets() {
+        try {
+          const res = await fetch('/.netlify/functions/secrets');
+          const data = await res.json();
+          return data;
+        } catch (e) {
+          console.error('Ошибка загрузки секретов:', e);
+          return {};
+        }
+      }
 
+      let BOT_TOKEN, CHAT_ID, MY_PHONE, DADATA_KEY;
+
+      // ===== DOM =====
       const addressFrom = document.getElementById('addressFrom');
       const addressTo = document.getElementById('addressTo');
       const fromSuggestions = document.getElementById('fromSuggestions');
@@ -483,9 +239,9 @@
         }
       });
 
-      // ===== ПОДСКАЗКИ АДРЕСОВ =====
       async function fetchSuggestions(query, suggestionsList) {
         if (query.length < 3) { suggestionsList.classList.add('hidden'); return; }
+        if (!DADATA_KEY) return;
         try {
           const res = await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
             method: 'POST',
@@ -519,39 +275,28 @@
       let fromTimeout, toTimeout;
       addressFrom.addEventListener('input', () => { clearTimeout(fromTimeout); fromTimeout = setTimeout(() => fetchSuggestions(addressFrom.value.trim(), fromSuggestions), 300); });
       addressTo.addEventListener('input', () => { clearTimeout(toTimeout); toTimeout = setTimeout(() => fetchSuggestions(addressTo.value.trim(), toSuggestions), 300); });
-
       document.addEventListener('click', (e) => {
         if (!document.getElementById('fromSection').contains(e.target)) fromSuggestions.classList.add('hidden');
         if (!document.getElementById('toSection').contains(e.target)) toSuggestions.classList.add('hidden');
       });
 
-      // ===== БЛОКИРОВКА КНОПКИ "УЗНАТЬ ЦЕНУ" =====
       function updateCalcButton() {
-        if (distanceCalculated) {
-          calcPriceBtn.disabled = false;
-          calcPriceBtn.textContent = '🔍 Узнать цену';
-        } else {
-          calcPriceBtn.disabled = true;
-          calcPriceBtn.textContent = '🔍 Сначала рассчитайте расстояние';
-        }
+        if (distanceCalculated) { calcPriceBtn.disabled = false; calcPriceBtn.textContent = '🔍 Узнать цену'; }
+        else { calcPriceBtn.disabled = true; calcPriceBtn.textContent = '🔍 Сначала рассчитайте расстояние'; }
       }
       updateCalcButton();
 
-      // ===== РАСЧЁТ РАССТОЯНИЯ =====
       document.getElementById('calcDistanceBtn').addEventListener('click', async () => {
         const lat1 = parseFloat(addressFrom.dataset.lat);
         const lon1 = parseFloat(addressFrom.dataset.lon);
         const lat2 = parseFloat(addressTo.dataset.lat);
         const lon2 = parseFloat(addressTo.dataset.lon);
-
         if (!addressFrom.value.trim() || !addressTo.value.trim()) { alert('Заполните оба адреса'); return; }
         if (!lat1 || !lon1 || !lat2 || !lon2) { alert('Выберите адрес из выпадающего списка'); return; }
-
         distanceDisplay.classList.add('hidden');
         distanceLoading.classList.remove('hidden');
         distanceCalculated = false;
         updateCalcButton();
-
         try {
           const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=false`;
           const res = await fetch(url);
@@ -562,9 +307,7 @@
             distanceDisplay.classList.remove('hidden');
             distanceCalculated = true;
             updateCalcButton();
-          } else {
-            throw new Error('Маршрут не найден');
-          }
+          } else { throw new Error('Маршрут не найден'); }
         } catch (e) {
           alert('Не удалось рассчитать расстояние. Введите километры вручную.');
           const existing = document.getElementById('manualKmBlock');
@@ -586,7 +329,6 @@
         distanceLoading.classList.add('hidden');
       });
 
-      // ===== ФОРМУЛА ЦЕНЫ =====
       function calculatePrice() {
         const vehicleType = getSelectedValue('vehicleTypeGroup');
         const position = getSelectedValue('positionGroup');
@@ -595,8 +337,6 @@
         const gearbox = getSelectedValue('gearboxGroup');
         const neutral = getSelectedValue('neutralGroup');
         const transportType = getSelectedValue('transportTypeGroup');
-        const distance = currentDistance;
-
         let basePrice = 0, kmRate = 0;
         switch (vehicleType) {
           case 'Легковой': case 'Кроссовер': basePrice = 2500; kmRate = 100; break;
@@ -605,19 +345,16 @@
           case 'Трактор': basePrice = 3500; kmRate = 150; break;
           default: basePrice = 2500; kmRate = 100;
         }
-
-        let distanceCost = (transportType === 'По городу' || distance < 10) ? 0 : kmRate * distance;
+        let distanceCost = (transportType === 'По городу' || currentDistance < 10) ? 0 : kmRate * currentDistance;
         let totalPrice = basePrice + distanceCost;
         let extras = [], extraCost = 0;
-
         if (towHook === 'Нет ничего') { extraCost += 300; extras.push('Нет буксировочного: +300₽'); }
         if (wheelsRoll === 'Нет') { extraCost += 500; extras.push('Заблокировано колёс: +500₽'); }
         if (gearbox !== 'Механика' && neutral === 'Нет') { extraCost += 500; extras.push('Не встаёт на нейтраль: +500₽'); }
         if (position === 'В кювете') { extraCost += 2000; extras.push('В кювете: +2000₽'); }
         else if (position === 'На боку' || position === 'На крыше') { extraCost += 3500; extras.push('На боку/крыше: +3500₽'); }
-
         totalPrice += extraCost;
-        return { basePrice, distanceCost, extraCost, extras, totalPrice, distance };
+        return { basePrice, distanceCost, extraCost, extras, totalPrice, distance: currentDistance };
       }
 
       function collectFormData() {
@@ -642,68 +379,37 @@
         };
       }
 
-      // ===== КНОПКА "УЗНАТЬ ЦЕНУ" =====
       calcPriceBtn.addEventListener('click', () => {
         if (!distanceCalculated) { alert('Сначала рассчитайте расстояние!'); return; }
-
         const formData = collectFormData();
         const priceData = calculatePrice();
-
-        if (!formData.name || !formData.phone || !formData.situation || !formData.transportType || 
-            !formData.vehicleType || !formData.position || !formData.damage || !formData.wheelsRoll ||
-            !formData.gearbox || !formData.towHook || !formData.time || !formData.addressFrom || !formData.addressTo) {
-          alert('Пожалуйста, заполните все поля формы');
-          return;
-        }
+        if (!formData.name || !formData.phone || !formData.situation || !formData.transportType || !formData.vehicleType || !formData.position || !formData.damage || !formData.wheelsRoll || !formData.gearbox || !formData.towHook || !formData.time || !formData.addressFrom || !formData.addressTo) { alert('Пожалуйста, заполните все поля формы'); return; }
         if (formData.phone.replace(/\D/g, '').length < 11) { alert('Введите корректный номер телефона'); return; }
-
         orderId = 'ORD-' + Date.now().toString(36).toUpperCase();
         formContainer.style.display = 'none';
         timerBlock.classList.remove('hidden');
         let seconds = 60;
         timerCount.textContent = seconds;
         timerStatus.textContent = 'секунд. Ожидайте ответ...';
-
-        const timerInterval = setInterval(() => {
-          seconds--;
-          timerCount.textContent = seconds;
-          if (seconds <= 0) { clearInterval(timerInterval); timerStatus.textContent = 'секунд. Ожидайте подтверждение...'; }
-        }, 1000);
-
+        const timerInterval = setInterval(() => { seconds--; timerCount.textContent = seconds; if (seconds <= 0) { clearInterval(timerInterval); timerStatus.textContent = 'секунд. Ожидайте подтверждение...'; } }, 1000);
         sendToTelegram(formData, priceData, timerInterval);
       });
 
-      // ===== ОТПРАВКА В TELEGRAM =====
       async function sendToTelegram(formData, priceData, timerInterval) {
+        if (!BOT_TOKEN || !CHAT_ID) { alert('Ошибка: секреты не загружены'); showFinalPrice(priceData, timerInterval); return; }
         const message = `🚛 *НОВЫЙ ЗАКАЗ #${orderId}*\n\n👤 *Клиент:* ${formData.name}\n📞 *Телефон:* ${formData.phone}\n🚨 *Ситуация:* ${formData.situation}\n📍 *Перевозка:* ${formData.transportType}\n🚗 *Тип ТС:* ${formData.vehicleType}\n🚙 *Положение:* ${formData.position}\n🔧 *Неисправность:* ${formData.damage}\n🛞 *Колёса крутятся:* ${formData.wheelsRoll}\n🔒 *Заблокировано колёс:* ${formData.blockedWheels}\n⚙️ *КПП:* ${formData.gearbox}\n⚡ *Нейтраль:* ${formData.neutral}\n🪝 *Буксировка:* ${formData.towHook}\n⏱️ *Время подачи:* ${formData.time} ${formData.customTime !== '—' ? formData.customTime : ''}\n📍 *Откуда:* ${formData.addressFrom}\n📌 *Куда:* ${formData.addressTo}\n🗺️ *Расстояние:* ${formData.distance} км\n\n💰 *РАСЧЁТ СТОИМОСТИ:*\nБазовая ставка: ${priceData.basePrice}₽\nКилометраж: ${priceData.distanceCost}₽\nДоплаты: ${priceData.extraCost}₽\n${priceData.extras.join('\n')}\n\n💎 *ИТОГО: ${priceData.totalPrice}₽*`;
-
-        const inlineKeyboard = {
-          inline_keyboard: [
-            [{ text: '✅ Подтвердить заказ', callback_data: `confirm_${orderId}` }, { text: '💸 Изменить сумму', callback_data: `editprice_${orderId}` }],
-            [{ text: '❌ Отменить заказ', callback_data: `cancel_${orderId}` }]
-          ]
-        };
-
+        const inlineKeyboard = { inline_keyboard: [[{ text: '✅ Подтвердить заказ', callback_data: `confirm_${orderId}` }, { text: '💸 Изменить сумму', callback_data: `editprice_${orderId}` }], [{ text: '❌ Отменить заказ', callback_data: `cancel_${orderId}` }]] };
         try {
           const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ chat_id: CHAT_ID, text: message, parse_mode: 'Markdown', reply_markup: inlineKeyboard })
           });
           const data = await response.json();
-          if (data.ok) {
-            startPolling(data.result.message_id, priceData, timerInterval);
-          } else {
-            alert('Ошибка: ' + data.description);
-            showFinalPrice(priceData, timerInterval);
-          }
-        } catch (err) {
-          alert('Ошибка соединения.');
-          showFinalPrice(priceData, timerInterval);
-        }
+          if (data.ok) startPolling(data.result.message_id, priceData, timerInterval);
+          else { alert('Ошибка: ' + data.description); showFinalPrice(priceData, timerInterval); }
+        } catch (err) { alert('Ошибка соединения.'); showFinalPrice(priceData, timerInterval); }
       }
 
-      // ===== ОПРОС ПОДТВЕРЖДЕНИЯ =====
       function startPolling(messageId, priceData, timerInterval) {
         let attempts = 0;
         const pollInterval = setInterval(async () => {
@@ -715,29 +421,13 @@
               const lastUpdate = data.result[data.result.length - 1];
               if (lastUpdate.callback_query && lastUpdate.callback_query.message.message_id === messageId) {
                 const cb = lastUpdate.callback_query;
-                if (cb.data.startsWith('confirm_')) {
-                  clearInterval(pollInterval);
-                  showFinalPrice(priceData, timerInterval);
-                  answerCallback(cb.id, '✅ Заказ подтверждён!');
-                  sendTgMsg('✅ *Заказ #' + orderId + ' подтверждён!* Цена: ' + priceData.totalPrice + '₽');
-                } else if (cb.data.startsWith('editprice_')) {
-                  answerCallback(cb.id, 'Введите новую цену в чат (только число). Например: 5000');
-                  waitForPrice(messageId, priceData, timerInterval, pollInterval);
-                } else if (cb.data.startsWith('cancel_')) {
-                  clearInterval(pollInterval);
-                  clearInterval(timerInterval);
-                  timerBlock.classList.add('hidden');
-                  formContainer.style.display = 'block';
-                  answerCallback(cb.id, '❌ Заказ отменён');
-                  sendTgMsg('❌ *Заказ #' + orderId + ' отменён владельцем.*');
-                }
+                if (cb.data.startsWith('confirm_')) { clearInterval(pollInterval); showFinalPrice(priceData, timerInterval); answerCallback(cb.id, '✅ Заказ подтверждён!'); sendTgMsg('✅ *Заказ #' + orderId + ' подтверждён!* Цена: ' + priceData.totalPrice + '₽'); }
+                else if (cb.data.startsWith('editprice_')) { answerCallback(cb.id, 'Введите новую цену в чат (только число). Например: 5000'); waitForPrice(messageId, priceData, timerInterval, pollInterval); }
+                else if (cb.data.startsWith('cancel_')) { clearInterval(pollInterval); clearInterval(timerInterval); timerBlock.classList.add('hidden'); formContainer.style.display = 'block'; answerCallback(cb.id, '❌ Заказ отменён'); sendTgMsg('❌ *Заказ #' + orderId + ' отменён владельцем.*'); }
               }
             }
           } catch (e) {}
-          if (attempts >= 80) {
-            clearInterval(pollInterval);
-            showFinalPrice(priceData, timerInterval);
-          }
+          if (attempts >= 80) { clearInterval(pollInterval); showFinalPrice(priceData, timerInterval); }
         }, 3000);
       }
 
@@ -752,64 +442,40 @@
               const lastUpdate = data.result[data.result.length - 1];
               if (lastUpdate.message && lastUpdate.message.text && lastUpdate.message.chat.id.toString() === CHAT_ID) {
                 const newPrice = parseInt(lastUpdate.message.text.trim());
-                if (!isNaN(newPrice) && newPrice > 0) {
-                  clearInterval(waitInterval);
-                  clearInterval(pollInterval);
-                  showFinalPrice({ ...priceData, totalPrice: newPrice }, timerInterval);
-                  sendTgMsg('✅ *Цена изменена!* Новая сумма: ' + newPrice + '₽');
-                }
+                if (!isNaN(newPrice) && newPrice > 0) { clearInterval(waitInterval); clearInterval(pollInterval); showFinalPrice({ ...priceData, totalPrice: newPrice }, timerInterval); sendTgMsg('✅ *Цена изменена!* Новая сумма: ' + newPrice + '₽'); }
               }
             }
           } catch (e) {}
-          if (waitAttempts >= 30) {
-            clearInterval(waitInterval);
-            showFinalPrice(priceData, timerInterval);
-            sendTgMsg('⏰ Время вышло. Клиент видит исходную цену: ' + priceData.totalPrice + '₽');
-          }
+          if (waitAttempts >= 30) { clearInterval(waitInterval); showFinalPrice(priceData, timerInterval); sendTgMsg('⏰ Время вышло. Клиент видит исходную цену: ' + priceData.totalPrice + '₽'); }
         }, 3000);
       }
 
       function answerCallback(id, text) {
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerCallbackQuery`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ callback_query_id: id, text: text })
-        });
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerCallbackQuery`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ callback_query_id: id, text: text }) });
       }
 
       function sendTgMsg(text) {
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'Markdown' })
-        });
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'Markdown' }) });
       }
 
       function showFinalPrice(priceData, timerInterval) {
         if (timerInterval) clearInterval(timerInterval);
         timerBlock.classList.add('hidden');
-        finalPriceBlock.innerHTML = `
-          <div class="price-block">
-            <div style="font-size:1rem; color:#BCCCDC;">Стоимость эвакуации</div>
-            <div class="price-amount">${priceData.totalPrice} ₽</div>
-            <div class="price-breakdown">
-              База: ${priceData.basePrice}₽<br>
-              Километраж: ${priceData.distanceCost}₽<br>
-              Доплаты: ${priceData.extraCost}₽
-              ${priceData.extras.length ? '<br>' + priceData.extras.join('<br>') : ''}
-            </div>
-          </div>
-          <button class="btn-success" onclick="window.location.href='tel:${MY_PHONE}'">✅ Устраивает! Позвонить водителю</button>
-          <button class="btn-danger" id="clientCancelBtn">❌ Отказаться от заказа</button>
-        `;
+        finalPriceBlock.innerHTML = `<div class="price-block"><div style="font-size:1rem; color:#BCCCDC;">Стоимость эвакуации</div><div class="price-amount">${priceData.totalPrice} ₽</div><div class="price-breakdown">База: ${priceData.basePrice}₽<br>Километраж: ${priceData.distanceCost}₽<br>Доплаты: ${priceData.extraCost}₽${priceData.extras.length ? '<br>' + priceData.extras.join('<br>') : ''}</div></div><button class="btn-success" onclick="window.location.href='tel:${MY_PHONE}'">✅ Устраивает! Позвонить водителю</button><button class="btn-danger" id="clientCancelBtn">❌ Отказаться от заказа</button>`;
         finalPriceBlock.classList.remove('hidden');
-
-        document.getElementById('clientCancelBtn').addEventListener('click', async () => {
-          await sendTgMsg('❌ *Клиент отказался от заказа #' + orderId + '*\nЗаказ отменён клиентом после показа цены.');
-          alert('Заказ отменён. Спасибо за обращение!');
-          location.reload();
-        });
+        document.getElementById('clientCancelBtn').addEventListener('click', async () => { await sendTgMsg('❌ *Клиент отказался от заказа #' + orderId + '*\nЗаказ отменён клиентом после показа цены.'); alert('Заказ отменён. Спасибо за обращение!'); location.reload(); });
       }
+
+      // ===== ЗАГРУЗКА СЕКРЕТОВ ПРИ СТАРТЕ =====
+      async function init() {
+        const secrets = await getSecrets();
+        BOT_TOKEN = secrets.BOT_TOKEN || '';
+        CHAT_ID = secrets.CHAT_ID || '';
+        MY_PHONE = secrets.MY_PHONE || '+79010993555';
+        DADATA_KEY = secrets.DADATA_KEY || '';
+      }
+
+      init();
     })();
   </script>
 </body>
