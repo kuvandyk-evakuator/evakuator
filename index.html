@@ -276,7 +276,7 @@
       };
 
       try {
-        const response = await fetch('/.netlify/functions/send-order', {
+        const response = await fetch('/api/send-order', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text: message, parse_mode: 'Markdown', reply_markup: inlineKeyboard })
@@ -300,7 +300,7 @@
       const pollInterval = setInterval(async () => {
         attempts++;
         try {
-          const res = await fetch('/.netlify/functions/check-order');
+          const res = await fetch('/api/check-order');
           const data = await res.json();
           if (data.ok && data.result && data.result.length > 0) {
             const lastUpdate = data.result[data.result.length - 1];
@@ -337,7 +337,7 @@
       const waitInterval = setInterval(async () => {
         waitAttempts++;
         try {
-          const res = await fetch('/.netlify/functions/check-order');
+          const res = await fetch('/api/check-order');
           const data = await res.json();
           if (data.ok && data.result && data.result.length > 0) {
             const lastUpdate = data.result[data.result.length - 1];
@@ -361,7 +361,7 @@
     }
 
     function answerCallback(id, text) {
-      fetch('/.netlify/functions/answer-callback', {
+      fetch('/api/answer-callback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ callback_query_id: id, text: text })
@@ -369,7 +369,7 @@
     }
 
     function sendTgMsg(text) {
-      fetch('/.netlify/functions/send-order', {
+      fetch('/api/send-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: text, parse_mode: 'Markdown' })
