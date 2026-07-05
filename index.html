@@ -36,6 +36,8 @@
     .suggestions-list li { padding: 12px 16px; cursor: pointer; color: #CBD5E1; border-bottom: 1px solid #2D5A77; font-size: 0.9rem; }
     .suggestions-list li:hover { background: #F2A900; color: #0B1A2F; }
     .distance-display { background: #1A3A4E; border-radius: 16px; padding: 12px; text-align: center; color: #F2A900; font-weight: bold; }
+    .call-fallback { background: #1A3A4E; border: 2px solid #F2A900; border-radius: 20px; padding: 20px; text-align: center; margin-top: 16px; }
+    .call-fallback p { color: #BCCCDC; margin-bottom: 12px; font-size: 1rem; }
   </style>
 </head>
 <body>
@@ -66,10 +68,8 @@
 
   <script>
 (function() {
-  var B = '8'+'8'+'1'+'5'+'4'+'5'+'9'+'4'+'7'+'3'+':'+'A'+'A'+'E'+'D'+'Q'+'j'+'2'+'I'+'b'+'I'+'7'+'6'+'I'+'e'+'1'+'Z'+'A'+'r'+'6'+'Y'+'2'+'j'+'v'+'2'+'D'+'E'+'Q'+'k'+'G'+'8'+'W'+'p'+'Y'+'3'+'w';
-  var C = '5'+'9'+'9'+'2'+'7'+'0'+'3'+'5'+'3'+'7';
-  var P = '+'+'7'+'9'+'0'+'1'+'0'+'9'+'9'+'3'+'5'+'5'+'5';
-  var D = 'b'+'d'+'a'+'7'+'f'+'0'+'f'+'9'+'8'+'7'+'6'+'0'+'b'+'a'+'9'+'2'+'4'+'d'+'a'+'a'+'f'+'3'+'8'+'4'+'1'+'2'+'8'+'7'+'c'+'e'+'4'+'e'+'a'+'0'+'a'+'c'+'1'+'a'+'e'+'a';
+  var PHONE = '+79010993555';
+  var DADATA = 'bda7f0f98760ba924daaf3841287ce4ea0ac1aea';
 
   var af = document.getElementById('addressFrom');
   var at = document.getElementById('addressTo');
@@ -137,7 +137,7 @@
     try {
       var r = await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
         method:'POST',
-        headers:{'Content-Type':'application/json','Authorization':'Token '+D},
+        headers:{'Content-Type':'application/json','Authorization':'Token '+DADATA},
         body:JSON.stringify({query:q,count:5})
       });
       var d = await r.json();
@@ -248,75 +248,60 @@
     oid = 'ORD-'+Date.now().toString(36).toUpperCase();
     fc.style.display='none'; tb.classList.remove('hidden');
     var sec=60; tc.textContent=sec; tst.textContent='секунд. Ожидайте ответ...';
-    var ti = setInterval(function(){ sec--; tc.textContent=sec; if(sec<=0){ clearInterval(ti); tst.textContent='Ожидайте подтверждение...'; } },1000);
-    stg(fd,pd,ti);
+    var ti = setInterval(function(){ sec--; tc.textContent=sec; if(sec<=0){ clearInterval(ti); showFallback(pd); } },1000);
+    
+    // Отправляем через функцию Netlify
+    sendOrder(fd,pd,ti);
   });
 
-  async function stg(fd,pd,ti) {
-    var msg = '🚛 *НОВЫЙ ЗАКАЗ #'+oid+'*\n\n👤 *Клиент:* '+fd.name+'\n📞 *Телефон:* '+fd.phone+'\n🚨 *Ситуация:* '+fd.situation+'\n📍 *Перевозка:* '+fd.transportType+'\n🚗 *Тип ТС:* '+fd.vehicleType+'\n🚙 *Положение:* '+fd.position+'\n🔧 *Неисправность:* '+fd.damage+'\n🛞 *Колёса:* '+fd.wheelsRoll+'\n🔒 *Заблокировано:* '+fd.blockedWheels+'\n⚙️ *КПП:* '+fd.gearbox+'\n⚡ *Нейтраль:* '+fd.neutral+'\n🪝 *Буксировка:* '+fd.towHook+'\n⏱️ *Время:* '+fd.time+' '+(fd.customTime!=='—'?fd.customTime:'')+'\n📍 *Откуда:* '+fd.addressFrom+'\n📌 *Куда:* '+fd.addressTo+'\n🗺️ *Расстояние:* '+fd.distance+' км\n\n💰 *РАСЧЁТ:*\nБаза: '+pd.basePrice+'₽\nКм: '+pd.distanceCost+'₽\nДоплаты: '+pd.extraCost+'₽\n'+pd.extras.join('\n')+'\n\n💎 *ИТОГО: '+pd.totalPrice+'₽*';
-    var ik = {inline_keyboard:[[{text:'✅ Подтвердить заказ',callback_data:'confirm_'+oid},{text:'💸 Изменить сумму',callback_data:'editprice_'+oid}],[{text:'❌ Отменить заказ',callback_data:'cancel_'+oid}]]};
+  async function sendOrder(fd,pd,ti) {
     try {
-      var r = await fetch('https://api.telegram.org/bot'+B+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:C,text:msg,parse_mode:'Markdown',reply_markup:ik})});
+      var r = await fetch('/.netlify/functions/send-order', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({formData:fd,priceData:pd,orderId:oid})
+      });
       var d = await r.json();
-      if(d.ok) sp(d.result.message_id,pd,ti);
-      else { alert('Ошибка: '+d.description); sfp(pd,ti); }
-    } catch(e) { alert('Ошибка соединения'); sfp(pd,ti); }
+      if(d.ok) {
+        startPolling(d.messageId,pd,ti);
+      } else {
+        clearInterval(ti);
+        showFallback(pd);
+      }
+    } catch(e) {
+      clearInterval(ti);
+      showFallback(pd);
+    }
   }
 
-  function sp(mid,pd,ti) {
+  function startPolling(mid,pd,ti) {
     var at=0;
     var pi = setInterval(async function() {
       at++;
       try {
-        var r = await fetch('https://api.telegram.org/bot'+B+'/getUpdates?offset=-1&timeout=2');
+        var r = await fetch('/.netlify/functions/check-order?messageId='+mid);
         var d = await r.json();
-        if(d.ok&&d.result&&d.result.length>0) {
-          var lu = d.result[d.result.length-1];
-          if(lu.callback_query&&lu.callback_query.message.message_id===mid) {
-            var cb = lu.callback_query;
-            if(cb.data.startsWith('confirm_')){ clearInterval(pi); sfp(pd,ti); acb(cb.id,'✅ Подтверждён!'); stm('✅ *Заказ #'+oid+' подтверждён!* '+pd.totalPrice+'₽'); }
-            else if(cb.data.startsWith('editprice_')){ acb(cb.id,'Введите новую цену в чат (только число)'); wfp(mid,pd,ti,pi); }
-            else if(cb.data.startsWith('cancel_')){ clearInterval(pi); clearInterval(ti); tb.classList.add('hidden'); fc.style.display='block'; acb(cb.id,'❌ Отменён'); stm('❌ *Заказ #'+oid+' отменён.*'); }
-          }
-        }
+        if(d.status==='confirmed'){ clearInterval(pi); clearInterval(ti); sfp(pd); }
+        else if(d.status==='cancelled'){ clearInterval(pi); clearInterval(ti); tb.classList.add('hidden'); fc.style.display='block'; alert('Заказ отменён'); }
       } catch(e) {}
-      if(at>=80){ clearInterval(pi); sfp(pd,ti); }
+      if(at>=80){ clearInterval(pi); clearInterval(ti); showFallback(pd); }
     },3000);
   }
 
-  function wfp(mid,pd,ti,pi) {
-    var wa=0;
-    var wi = setInterval(async function() {
-      wa++;
-      try {
-        var r = await fetch('https://api.telegram.org/bot'+B+'/getUpdates?offset=-1&timeout=2');
-        var d = await r.json();
-        if(d.ok&&d.result&&d.result.length>0) {
-          var lu = d.result[d.result.length-1];
-          if(lu.message&&lu.message.text&&lu.message.chat.id.toString()===C) {
-            var np = parseInt(lu.message.text.trim());
-            if(!isNaN(np)&&np>0){ clearInterval(wi); clearInterval(pi); sfp({...pd,totalPrice:np},ti); stm('✅ *Цена изменена!* '+np+'₽'); }
-          }
-        }
-      } catch(e) {}
-      if(wa>=30){ clearInterval(wi); sfp(pd,ti); stm('⏰ Время вышло. Цена: '+pd.totalPrice+'₽'); }
-    },3000);
-  }
-
-  function acb(id,txt) {
-    fetch('https://api.telegram.org/bot'+B+'/answerCallbackQuery',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({callback_query_id:id,text:txt})});
-  }
-
-  function stm(txt) {
-    fetch('https://api.telegram.org/bot'+B+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:C,text:txt,parse_mode:'Markdown'})});
-  }
-
-  function sfp(pd,ti) {
-    if(ti) clearInterval(ti);
+  function showFallback(pd) {
     tb.classList.add('hidden');
-    fpb.innerHTML = '<div class="price-block"><div style="font-size:1rem;color:#BCCCDC;">Стоимость эвакуации</div><div class="price-amount">'+pd.totalPrice+' ₽</div><div class="price-breakdown">База: '+pd.basePrice+'₽<br>Км: '+pd.distanceCost+'₽<br>Доплаты: '+pd.extraCost+'₽'+(pd.extras.length?'<br>'+pd.extras.join('<br>'):'')+'</div></div><button class="btn-success" onclick="window.location.href=\'tel:'+P+'\'">✅ Устраивает! Позвонить водителю</button><button class="btn-danger" id="clientCancelBtn">❌ Отказаться от заказа</button>';
+    fpb.innerHTML = '<div class="call-fallback"><p>📱 Похоже, водитель не слышит уведомление.<br>Но вы можете позвонить ему:</p><button class="btn-success" onclick="window.location.href=\'tel:'+PHONE+'\'">📞 Позвонить водителю</button><p style="margin-top:12px;color:#9FB3C8;font-size:0.85rem;">Стоимость эвакуации: <b>'+pd.totalPrice+' ₽</b></p><button class="btn-danger" style="margin-top:8px;" onclick="location.reload()">❌ Отменить заказ</button></div>';
     fpb.classList.remove('hidden');
-    document.getElementById('clientCancelBtn').addEventListener('click', async function() { await stm('❌ *Клиент отказался от заказа #'+oid+'*'); alert('Заказ отменён.'); location.reload(); });
+  }
+
+  function sfp(pd) {
+    tb.classList.add('hidden');
+    fpb.innerHTML = '<div class="price-block"><div style="font-size:1rem;color:#BCCCDC;">Стоимость эвакуации</div><div class="price-amount">'+pd.totalPrice+' ₽</div><div class="price-breakdown">База: '+pd.basePrice+'₽<br>Км: '+pd.distanceCost+'₽<br>Доплаты: '+pd.extraCost+'₽'+(pd.extras.length?'<br>'+pd.extras.join('<br>'):'')+'</div></div><button class="btn-success" onclick="window.location.href=\'tel:'+PHONE+'\'">✅ Устраивает! Позвонить водителю</button><button class="btn-danger" id="clientCancelBtn">❌ Отказаться от заказа</button>';
+    fpb.classList.remove('hidden');
+    document.getElementById('clientCancelBtn').addEventListener('click', async function() {
+      await fetch('/.netlify/functions/cancel-order?orderId='+oid);
+      alert('Заказ отменён.'); location.reload();
+    });
   }
 
 })();
