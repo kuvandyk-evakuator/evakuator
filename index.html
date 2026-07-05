@@ -1,110 +1,405 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>Эвакуатор Валдай | Кувандык</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0B1A2F; font-family: system-ui, -apple-system, sans-serif; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 16px; color: #E0E8F0; }
-    .app { width: 100%; max-width: 400px; background: #102B3F; border-radius: 32px; padding: 20px 16px 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); display: flex; flex-direction: column; gap: 24px; }
-    .logo { text-align: center; font-size: 1.7rem; font-weight: 700; color: #F2A900; line-height: 1.3; }
-    .logo small { display: block; font-size: 0.9rem; font-weight: 400; color: #9FB3C8; }
-    .section { display: flex; flex-direction: column; gap: 10px; position: relative; }
-    .label { font-weight: 600; font-size: 1rem; color: #BCCCDC; }
-    input, select { background: #1E4058; border: 1px solid #2D5A77; border-radius: 16px; padding: 14px 16px; font-size: 1rem; color: white; outline: none; width: 100%; }
-    input::placeholder { color: #7B9BB2; }
-    input:focus { border-color: #F2A900; box-shadow: 0 0 0 3px rgba(242,169,0,0.25); }
-    .row-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
-    .btn-option { flex: 1 1 auto; background: #1A3A4E; border: 2px solid #2D5A77; border-radius: 16px; padding: 14px 12px; font-size: 0.95rem; font-weight: 600; color: #CBD5E1; text-align: center; cursor: pointer; min-width: 80px; }
-    .btn-option.active { background: #F2A900; border-color: #F2A900; color: #0B1A2F; font-weight: 700; }
-    .btn-primary { background: #F2A900; color: #0B1A2F; font-weight: bold; padding: 16px; border: none; border-radius: 20px; font-size: 1.2rem; cursor: pointer; width: 100%; }
-    .btn-primary:disabled { background: #555; color: #999; cursor: not-allowed; opacity: 0.7; }
-    .btn-secondary { background: #1E4058; color: #F2A900; font-weight: bold; padding: 14px; border: 2px solid #F2A900; border-radius: 20px; font-size: 1rem; cursor: pointer; width: 100%; margin-top: 4px; }
-    .hidden { display: none !important; }
-    .sub-group { margin-top: 8px; display: flex; flex-direction: column; gap: 10px; padding-left: 8px; border-left: 3px solid #F2A900; }
-    .counter-select { width: 70px; text-align: center; }
-    .timer-overlay { background: #0D2137; border: 2px solid #F2A900; border-radius: 20px; padding: 20px; text-align: center; margin-top: 16px; }
-    .timer-number { font-size: 3rem; font-weight: 800; color: #F2A900; }
-    .timer-text { color: #BCCCDC; margin-top: 4px; }
-    .price-block { background: #0A2F1F; border: 2px solid #2ECC71; border-radius: 24px; padding: 24px; text-align: center; margin-top: 16px; }
-    .price-amount { font-size: 2.5rem; font-weight: 800; color: #FFFFFF; }
-    .price-breakdown { color: #BCCCDC; font-size: 0.9rem; margin-top: 8px; text-align: left; }
-    .btn-success { background: #2ECC71; color: white; font-weight: bold; padding: 16px; border: none; border-radius: 20px; font-size: 1.1rem; cursor: pointer; width: 100%; margin-top: 8px; }
-    .btn-danger { background: #E74C3C; color: white; font-weight: bold; padding: 16px; border: none; border-radius: 20px; font-size: 1.1rem; cursor: pointer; width: 100%; margin-top: 8px; }
-    .suggestions-list { position: absolute; top: 100%; left: 0; right: 0; background: #1A3A4E; border: 1px solid #2D5A77; border-radius: 0 0 16px 16px; max-height: 200px; overflow-y: auto; z-index: 100; list-style: none; }
-    .suggestions-list li { padding: 12px 16px; cursor: pointer; color: #CBD5E1; border-bottom: 1px solid #2D5A77; font-size: 0.9rem; }
-    .suggestions-list li:hover { background: #F2A900; color: #0B1A2F; }
-    .distance-display { background: #1A3A4E; border-radius: 16px; padding: 12px; text-align: center; color: #F2A900; font-weight: bold; }
-    .call-fallback { background: #1A3A4E; border: 2px solid #F2A900; border-radius: 20px; padding: 20px; text-align: center; margin-top: 16px; }
-    .call-fallback p { color: #BCCCDC; margin-bottom: 12px; font-size: 1rem; }
-  </style>
-</head>
-<body>
-  <div class="app" id="app">
-    <div class="logo">🚛 Эвакуатор Валдай<br><small>Кувандык · до 5 тонн</small></div>
-    <div id="formContainer">
-      <div class="section"><div class="label">👤 Ваше имя</div><input type="text" id="customerName" placeholder="Иван Иванов"></div>
-      <div class="section"><div class="label">📞 Телефон</div><input type="tel" id="customerPhone" placeholder="+7 (___) ___-__-__"></div>
-      <div class="section"><div class="label">🚨 Ситуация</div><div class="row-buttons" id="situationGroup"><div class="btn-option" data-value="ДТП">ДТП</div><div class="btn-option" data-value="Поломка">Поломка</div></div></div>
-      <div class="section"><div class="label">📍 Перевозка</div><div class="row-buttons" id="transportTypeGroup"><div class="btn-option" data-value="По городу">По городу</div><div class="btn-option" data-value="За город">За город</div></div></div>
-      <div class="section"><div class="label">🚗 Тип ТС</div><div class="row-buttons" id="vehicleTypeGroup"><div class="btn-option" data-value="Легковой">Легковой</div><div class="btn-option" data-value="Кроссовер">Кроссовер</div><div class="btn-option" data-value="Внедорожник">Внедорожник</div><div class="btn-option" data-value="Легкий коммерческий">Коммерческий</div><div class="btn-option" data-value="Трактор">Трактор</div></div></div>
-      <div class="section"><div class="label">🚙 Положение авто</div><div class="row-buttons" id="positionGroup"><div class="btn-option" data-value="На дороге">На дороге</div><div class="btn-option" data-value="В кювете">В кювете</div><div class="btn-option" data-value="На боку">На боку</div><div class="btn-option" data-value="На крыше">На крыше</div></div></div>
-      <div class="section"><div class="label">🔧 Неисправность</div><div class="row-buttons" id="damageGroup"><div class="btn-option" data-value="Ходовая часть">Ходовая</div><div class="btn-option" data-value="Двигатель">Двигатель</div></div></div>
-      <div class="section"><div class="label">🛞 Колёса крутятся?</div><div class="row-buttons" id="wheelsRollGroup"><div class="btn-option" data-value="Да">Да</div><div class="btn-option" data-value="Нет">Нет</div></div><div id="blockedWheelsBlock" class="sub-group hidden"><div class="label">🔒 Заблокировано колёс</div><input type="number" id="blockedWheelsCount" min="1" max="4" value="1" class="counter-select"></div></div>
-      <div class="section"><div class="label">⚙️ Коробка передач</div><div class="row-buttons" id="gearboxGroup"><div class="btn-option" data-value="Механика">Механика</div><div class="btn-option" data-value="Автомат">Автомат</div><div class="btn-option" data-value="Робот">Робот</div><div class="btn-option" data-value="Вариатор">Вариатор</div></div><div id="neutralBlock" class="sub-group hidden"><div class="label">⚡ Встаёт на нейтраль?</div><div class="row-buttons" id="neutralGroup"><div class="btn-option" data-value="Да">Да</div><div class="btn-option" data-value="Нет">Нет</div></div></div></div>
-      <div class="section"><div class="label">🪝 Буксировочное устройство</div><div class="row-buttons" id="towHookGroup"><div class="btn-option" data-value="Есть крючок">Крючок</div><div class="btn-option" data-value="Есть петля">Петля</div><div class="btn-option" data-value="Нет ничего">Нет ничего</div></div></div>
-      <div class="section"><div class="label">⏱️ Время подачи</div><div class="row-buttons" id="timeGroup"><div class="btn-option" data-value="Как можно быстрее">Срочно</div><div class="btn-option" data-value="Ко времени">Ко времени</div><div class="btn-option" data-value="По записи">По записи</div></div><div id="customTimeBlock" class="sub-group hidden"><input type="time" id="customTimeInput"></div></div>
-      <div class="section" id="fromSection"><div class="label">📍 Откуда</div><input type="text" id="addressFrom" placeholder="Начните вводить адрес..." autocomplete="off"><ul class="suggestions-list hidden" id="fromSuggestions"></ul></div>
-      <div class="section" id="toSection"><div class="label">📌 Куда</div><input type="text" id="addressTo" placeholder="Начните вводить адрес..." autocomplete="off"><ul class="suggestions-list hidden" id="toSuggestions"></ul></div>
-      <button class="btn-secondary" id="calcDistanceBtn">🗺️ Рассчитать расстояние</button>
-      <div id="distanceDisplay" class="distance-display hidden">✅ Расстояние: <span id="distanceValue">0</span> км</div>
-      <div id="distanceLoading" class="hidden" style="text-align:center;color:#F2A900;">⏳ Считаем маршрут...</div>
-      <button class="btn-primary" id="calcPriceBtn" disabled>🔍 Сначала рассчитайте расстояние</button>
-    </div>
-    <div id="timerBlock" class="timer-overlay hidden"><div class="timer-number" id="timerCount">60</div><div class="timer-text" id="timerStatus">секунд. Ожидайте ответ...</div></div>
-    <div id="finalPriceBlock" class="hidden"></div>
-  </div>
-  <script>
-!function(){
-  var B='8815459473:AAEDQj2IbI76Ie1ZAr6Y2jv2DEQkG8WpY3w';
-  var C='5992703537';
-  var P='+79010993555';
-  var D='bda7f0f98760ba924daaf3841287ce4ea0ac1aea';
-  var af=document.getElementById('addressFrom'),at=document.getElementById('addressTo');
-  var fs=document.getElementById('fromSuggestions'),ts=document.getElementById('toSuggestions');
-  var dd=document.getElementById('distanceDisplay'),dv=document.getElementById('distanceValue');
-  var dl=document.getElementById('distanceLoading'),bw=document.getElementById('blockedWheelsBlock');
-  var bwc=document.getElementById('blockedWheelsCount'),nb=document.getElementById('neutralBlock');
-  var ctb=document.getElementById('customTimeBlock'),tb=document.getElementById('timerBlock');
-  var tc=document.getElementById('timerCount'),tst=document.getElementById('timerStatus');
-  var fpb=document.getElementById('finalPriceBlock'),cpb=document.getElementById('calcPriceBtn');
-  var fc=document.getElementById('formContainer');
-  var cd=0,dCalc=false,oid=null;
-  function ibg(g,cb){var gr=document.getElementById(g);if(!gr)return;gr.addEventListener('click',function(e){var b=e.target.closest('.btn-option');if(!b)return;gr.querySelectorAll('.btn-option').forEach(function(x){x.classList.remove('active')});b.classList.add('active');if(cb)cb(b.dataset.value)})}
-  function gsv(g){var a=document.querySelector('#'+g+' .btn-option.active');return a?a.dataset.value:null}
-  ibg('situationGroup');ibg('transportTypeGroup');ibg('vehicleTypeGroup');ibg('positionGroup');ibg('damageGroup');ibg('towHookGroup');
-  ibg('wheelsRollGroup',function(v){if(v==='Нет')bw.classList.remove('hidden');else bw.classList.add('hidden')});
-  ibg('gearboxGroup',function(v){if(v!=='Механика')nb.classList.remove('hidden');else nb.classList.add('hidden')});ibg('neutralGroup');
-  ibg('timeGroup',function(v){if(v==='Ко времени')ctb.classList.remove('hidden');else ctb.classList.add('hidden')});
-  document.getElementById('customerPhone').addEventListener('input',function(e){var v=e.target.value.replace(/\D/g,'');if(!v.startsWith('7'))v='7'+v;v=v.substring(0,11);var f='+7';if(v.length>1)f+=' ('+v.substring(1,4);if(v.length>=4)f+=') '+v.substring(4,7);if(v.length>=7)f+='-'+v.substring(7,9);if(v.length>=9)f+='-'+v.substring(9,11);e.target.value=f});
-  document.getElementById('vehicleTypeGroup').addEventListener('click',function(e){var b=e.target.closest('.btn-option');if(!b)return;if(b.dataset.value==='Трактор'||b.dataset.value==='Легкий коммерческий')setTimeout(function(){alert('✅ Отлично! Мой эвакуатор справится с этим весом.')},100)});
-  async function fsug(q,sl){if(q.length<3){sl.classList.add('hidden');return}try{var r=await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Token '+D},body:JSON.stringify({query:q,count:5})});var d=await r.json();sl.innerHTML='';if(d.suggestions&&d.suggestions.length>0){d.suggestions.forEach(function(s){var li=document.createElement('li');li.textContent=s.value;li.addEventListener('click',function(){var inp=sl.id==='fromSuggestions'?af:at;inp.value=s.value;inp.dataset.lat=s.data.geo_lat;inp.dataset.lon=s.data.geo_lon;sl.classList.add('hidden');dCalc=false;ucb()});sl.appendChild(li)});sl.classList.remove('hidden')}else sl.classList.add('hidden')}catch(e){}}
-  var ft,tt;af.addEventListener('input',function(){clearTimeout(ft);ft=setTimeout(function(){fsug(af.value.trim(),fs)},300)});at.addEventListener('input',function(){clearTimeout(tt);tt=setTimeout(function(){fsug(at.value.trim(),ts)},300)});
-  document.addEventListener('click',function(e){if(!document.getElementById('fromSection').contains(e.target))fs.classList.add('hidden');if(!document.getElementById('toSection').contains(e.target))ts.classList.add('hidden')});
-  function ucb(){if(dCalc){cpb.disabled=false;cpb.textContent='🔍 Узнать цену'}else{cpb.disabled=true;cpb.textContent='🔍 Сначала рассчитайте расстояние'}}ucb();
-  document.getElementById('calcDistanceBtn').addEventListener('click',async function(){var lat1=parseFloat(af.dataset.lat),lon1=parseFloat(af.dataset.lon);var lat2=parseFloat(at.dataset.lat),lon2=parseFloat(at.dataset.lon);if(!af.value.trim()||!at.value.trim()){alert('Заполните оба адреса');return}if(!lat1||!lon1||!lat2||!lon2){alert('Выберите адрес из выпадающего списка');return}dd.classList.add('hidden');dl.classList.remove('hidden');dCalc=false;ucb();try{var r=await fetch('https://router.project-osrm.org/route/v1/driving/'+lon1+','+lat1+';'+lon2+','+lat2+'?overview=false');var d=await r.json();if(d.code==='Ok'&&d.routes&&d.routes.length>0){cd=Math.round(d.routes[0].distance/1000);dv.textContent=cd;dd.classList.remove('hidden');dCalc=true;ucb()}else throw new Error('No route')}catch(e){alert('Не удалось рассчитать расстояние. Введите км вручную.');var ex=document.getElementById('manualKmBlock');if(!ex){var mi=document.createElement('div');mi.className='section';mi.id='manualKmBlock';mi.innerHTML='<div class="label">⚠️ Введите расстояние вручную (км)</div><input type="number" id="manualKm" placeholder="15" min="0" step="0.1">';document.getElementById('calcDistanceBtn').after(mi);document.getElementById('manualKm').addEventListener('input',function(){cd=parseFloat(this.value)||0;dv.textContent=cd;dd.classList.remove('hidden');dCalc=true;ucb()})}}dl.classList.add('hidden')});
-  function calcP(){var vt=gsv('vehicleTypeGroup'),pos=gsv('positionGroup'),th=gsv('towHookGroup');var wr=gsv('wheelsRollGroup'),gb=gsv('gearboxGroup'),nt=gsv('neutralGroup'),tt=gsv('transportTypeGroup');var bp=0,kr=0;switch(vt){case'Легковой':case'Кроссовер':bp=2500;kr=100;break;case'Внедорожник':bp=2800;kr=100;break;case'Легкий коммерческий':bp=3000;kr=120;break;case'Трактор':bp=3500;kr=150;break;default:bp=2500;kr=100}var dc=(tt==='По городу'||cd<10)?0:kr*cd;var tp=bp+dc,exs=[],exc=0;if(th==='Нет ничего'){exc+=300;exs.push('Нет буксировочного: +300₽')}if(wr==='Нет'){exc+=500;exs.push('Заблокировано колёс: +500₽')}if(gb!=='Механика'&&nt==='Нет'){exc+=500;exs.push('Не встаёт на нейтраль: +500₽')}if(pos==='В кювете'){exc+=2000;exs.push('В кювете: +2000₽')}else if(pos==='На боку'||pos==='На крыше'){exc+=3500;exs.push('На боку/крыше: +3500₽')}tp+=exc;return{basePrice:bp,distanceCost:dc,extraCost:exc,extras:exs,totalPrice:tp,distance:cd}}
-  function cfd(){return{name:document.getElementById('customerName').value.trim(),phone:document.getElementById('customerPhone').value.trim(),situation:gsv('situationGroup'),transportType:gsv('transportTypeGroup'),vehicleType:gsv('vehicleTypeGroup'),position:gsv('positionGroup'),damage:gsv('damageGroup'),wheelsRoll:gsv('wheelsRollGroup'),blockedWheels:gsv('wheelsRollGroup')==='Нет'?bwc.value:'Нет',gearbox:gsv('gearboxGroup'),neutral:gsv('gearboxGroup')!=='Механика'?gsv('neutralGroup'):'—',towHook:gsv('towHookGroup'),time:gsv('timeGroup'),customTime:gsv('timeGroup')==='Ко времени'?document.getElementById('customTimeInput').value:'—',addressFrom:af.value.trim(),addressTo:at.value.trim(),distance:cd}}
-  cpb.addEventListener('click',function(){if(!dCalc){alert('Сначала рассчитайте расстояние!');return}var fd=cfd(),pd=calcP();if(!fd.name||!fd.phone||!fd.situation||!fd.transportType||!fd.vehicleType||!fd.position||!fd.damage||!fd.wheelsRoll||!fd.gearbox||!fd.towHook||!fd.time||!fd.addressFrom||!fd.addressTo){alert('Заполните все поля');return}if(fd.phone.replace(/\D/g,'').length<11){alert('Введите корректный номер телефона');return}oid='ORD-'+Date.now().toString(36).toUpperCase();fc.style.display='none';tb.classList.remove('hidden');var sec=60;tc.textContent=sec;tst.textContent='секунд. Ожидайте ответ...';var ti=setInterval(function(){sec--;tc.textContent=sec;if(sec<=0){clearInterval(ti);sfb(pd)}},1000);stg(fd,pd,ti)});
-  async function stg(fd,pd,ti){var msg='🚛 *НОВЫЙ ЗАКАЗ #'+oid+'*\n\n👤 *Клиент:* '+fd.name+'\n📞 *Телефон:* '+fd.phone+'\n🚨 *Ситуация:* '+fd.situation+'\n📍 *Перевозка:* '+fd.transportType+'\n🚗 *Тип ТС:* '+fd.vehicleType+'\n🚙 *Положение:* '+fd.position+'\n🔧 *Неисправность:* '+fd.damage+'\n🛞 *Колёса:* '+fd.wheelsRoll+'\n🔒 *Заблокировано:* '+fd.blockedWheels+'\n⚙️ *КПП:* '+fd.gearbox+'\n⚡ *Нейтраль:* '+fd.neutral+'\n🪝 *Буксировка:* '+fd.towHook+'\n⏱️ *Время:* '+fd.time+' '+(fd.customTime!=='—'?fd.customTime:'')+'\n📍 *Откуда:* '+fd.addressFrom+'\n📌 *Куда:* '+fd.addressTo+'\n🗺️ *Расстояние:* '+fd.distance+' км\n\n💰 *РАСЧЁТ:*\nБаза: '+pd.basePrice+'₽\nКм: '+pd.distanceCost+'₽\nДоплаты: '+pd.extraCost+'₽\n'+pd.extras.join('\n')+'\n\n💎 *ИТОГО: '+pd.totalPrice+'₽*';var ik={inline_keyboard:[[{text:'✅ Подтвердить заказ',callback_data:'confirm_'+oid},{text:'💸 Изменить сумму',callback_data:'editprice_'+oid}],[{text:'❌ Отменить заказ',callback_data:'cancel_'+oid}]]};try{var r=await fetch('https://api.telegram.org/bot'+B+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:C,text:msg,parse_mode:'Markdown',reply_markup:ik})});var d=await r.json();if(d.ok){sp(d.result.message_id,pd,ti)}else{clearInterval(ti);sfb(pd)}}catch(e){clearInterval(ti);sfb(pd)}}
-  function sp(mid,pd,ti){var at=0;var pi=setInterval(async function(){at++;try{var r=await fetch('https://api.telegram.org/bot'+B+'/getUpdates?offset=-1&timeout=2');var d=await r.json();if(d.ok&&d.result&&d.result.length>0){var lu=d.result[d.result.length-1];if(lu.callback_query&&lu.callback_query.message.message_id===mid){var cb=lu.callback_query;if(cb.data.startsWith('confirm_')){clearInterval(pi);clearInterval(ti);sfp(pd);acb(cb.id,'✅ Подтверждён!');stm('✅ *Заказ #'+oid+' подтверждён!* '+pd.totalPrice+'₽')}else if(cb.data.startsWith('editprice_')){acb(cb.id,'Введите новую цену в чат (только число)');wfp(mid,pd,ti,pi)}else if(cb.data.startsWith('cancel_')){clearInterval(pi);clearInterval(ti);tb.classList.add('hidden');fc.style.display='block';acb(cb.id,'❌ Отменён');stm('❌ *Заказ #'+oid+' отменён.*')}}}if(at>=80){clearInterval(pi);clearInterval(ti);sfb(pd)}}catch(e){}},3000)}
-  function wfp(mid,pd,ti,pi){var wa=0;var wi=setInterval(async function(){wa++;try{var r=await fetch('https://api.telegram.org/bot'+B+'/getUpdates?offset=-1&timeout=2');var d=await r.json();if(d.ok&&d.result&&d.result.length>0){var lu=d.result[d.result.length-1];if(lu.message&&lu.message.text&&lu.message.chat.id.toString()===C){var np=parseInt(lu.message.text.trim());if(!isNaN(np)&&np>0){clearInterval(wi);clearInterval(pi);sfp({...pd,totalPrice:np});stm('✅ *Цена изменена!* '+np+'₽')}}}if(wa>=30){clearInterval(wi);sfp(pd);stm('⏰ Время вышло. Цена: '+pd.totalPrice+'₽')}}catch(e){}},3000)}
-  function acb(id,txt){fetch('https://api.telegram.org/bot'+B+'/answerCallbackQuery',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({callback_query_id:id,text:txt})})}
-  function stm(txt){fetch('https://api.telegram.org/bot'+B+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:C,text:txt,parse_mode:'Markdown'})})}
-  function sfb(pd){tb.classList.add('hidden');fpb.innerHTML='<div class="call-fallback"><p>📱 Похоже, водитель не слышит уведомление.<br>Но вы можете позвонить ему:</p><button class="btn-success" onclick="window.location.href=\'tel:'+P+'\'">📞 Позвонить водителю</button><p style="margin-top:12px;color:#9FB3C8;font-size:0.85rem;">Стоимость эвакуации: <b>'+pd.totalPrice+' ₽</b></p><button class="btn-danger" style="margin-top:8px;" onclick="location.reload()">❌ Отменить заказ</button></div>';fpb.classList.remove('hidden')}
-  function sfp(pd){tb.classList.add('hidden');fpb.innerHTML='<div class="price-block"><div style="font-size:1rem;color:#BCCCDC;">Стоимость эвакуации</div><div class="price-amount">'+pd.totalPrice+' ₽</div><div class="price-breakdown">База: '+pd.basePrice+'₽<br>Км: '+pd.distanceCost+'₽<br>Доплаты: '+pd.extraCost+'₽'+(pd.extras.length?'<br>'+pd.extras.join('<br>'):'')+'</div></div><button class="btn-success" onclick="window.location.href=\'tel:'+P+'\'">✅ Устраивает! Позвонить водителю</button><button class="btn-danger" id="clientCancelBtn">❌ Отказаться от заказа</button>';fpb.classList.remove('hidden');document.getElementById('clientCancelBtn').addEventListener('click',async function(){await stm('❌ *Клиент отказался от заказа #'+oid+'*');alert('Заказ отменён.');location.reload()})}
-}();
-  </script>
-</body>
-</html>
+<script>
+  (function() {
+    // ===== НАСТРОЙКИ =====
+    const MY_PHONE = '+79010993555';
+    const CHAT_ID = '5992703537';
+    const DADATA_KEY = 'bda7f0f98760ba924daaf3841287ce4ea0ac1aea';
+
+    const addressFrom = document.getElementById('addressFrom');
+    const addressTo = document.getElementById('addressTo');
+    const fromSuggestions = document.getElementById('fromSuggestions');
+    const toSuggestions = document.getElementById('toSuggestions');
+    const distanceDisplay = document.getElementById('distanceDisplay');
+    const distanceValue = document.getElementById('distanceValue');
+    const distanceLoading = document.getElementById('distanceLoading');
+    const blockedWheelsBlock = document.getElementById('blockedWheelsBlock');
+    const blockedWheelsCount = document.getElementById('blockedWheelsCount');
+    const neutralBlock = document.getElementById('neutralBlock');
+    const customTimeBlock = document.getElementById('customTimeBlock');
+    const timerBlock = document.getElementById('timerBlock');
+    const timerCount = document.getElementById('timerCount');
+    const timerStatus = document.getElementById('timerStatus');
+    const finalPriceBlock = document.getElementById('finalPriceBlock');
+    const calcPriceBtn = document.getElementById('calcPriceBtn');
+    const formContainer = document.getElementById('formContainer');
+
+    let currentDistance = 0;
+    let distanceCalculated = false;
+    let orderId = null;
+
+    function initButtonGroup(groupId, onChangeCallback) {
+      const group = document.getElementById(groupId);
+      if (!group) return;
+      group.addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn-option');
+        if (!btn) return;
+        group.querySelectorAll('.btn-option').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if (onChangeCallback) onChangeCallback(btn.dataset.value);
+      });
+    }
+
+    function getSelectedValue(groupId) {
+      const active = document.querySelector(`#${groupId} .btn-option.active`);
+      return active ? active.dataset.value : null;
+    }
+
+    initButtonGroup('situationGroup');
+    initButtonGroup('transportTypeGroup');
+    initButtonGroup('vehicleTypeGroup');
+    initButtonGroup('positionGroup');
+    initButtonGroup('damageGroup');
+    initButtonGroup('towHookGroup');
+    initButtonGroup('wheelsRollGroup', (v) => v === 'Нет' ? blockedWheelsBlock.classList.remove('hidden') : blockedWheelsBlock.classList.add('hidden'));
+    initButtonGroup('gearboxGroup', (v) => v !== 'Механика' ? neutralBlock.classList.remove('hidden') : neutralBlock.classList.add('hidden'));
+    initButtonGroup('neutralGroup');
+    initButtonGroup('timeGroup', (v) => v === 'Ко времени' ? customTimeBlock.classList.remove('hidden') : customTimeBlock.classList.add('hidden'));
+
+    document.getElementById('customerPhone').addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '');
+      if (!val.startsWith('7')) val = '7' + val;
+      val = val.substring(0, 11);
+      let f = '+7';
+      if (val.length > 1) f += ' (' + val.substring(1, 4);
+      if (val.length >= 4) f += ') ' + val.substring(4, 7);
+      if (val.length >= 7) f += '-' + val.substring(7, 9);
+      if (val.length >= 9) f += '-' + val.substring(9, 11);
+      e.target.value = f;
+    });
+
+    document.getElementById('vehicleTypeGroup').addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-option');
+      if (!btn) return;
+      if (btn.dataset.value === 'Трактор' || btn.dataset.value === 'Легкий коммерческий') {
+        setTimeout(() => alert('✅ Отлично! Мой эвакуатор справится с этим весом. Конкуренты с малым тоннажем не смогут вам помочь.'), 100);
+      }
+    });
+
+    // ===== ПОДСКАЗКИ АДРЕСОВ =====
+    async function fetchSuggestions(query, suggestionsList) {
+      if (query.length < 3) { suggestionsList.classList.add('hidden'); return; }
+      try {
+        const res = await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Token ' + DADATA_KEY },
+          body: JSON.stringify({ query: query, count: 5 })
+        });
+        const data = await res.json();
+        suggestionsList.innerHTML = '';
+        if (data.suggestions && data.suggestions.length > 0) {
+          data.suggestions.forEach(s => {
+            const li = document.createElement('li');
+            li.textContent = s.value;
+            li.addEventListener('click', () => {
+              const input = suggestionsList.id === 'fromSuggestions' ? addressFrom : addressTo;
+              input.value = s.value;
+              input.dataset.lat = s.data.geo_lat;
+              input.dataset.lon = s.data.geo_lon;
+              suggestionsList.classList.add('hidden');
+              distanceCalculated = false;
+              updateCalcButton();
+            });
+            suggestionsList.appendChild(li);
+          });
+          suggestionsList.classList.remove('hidden');
+        } else {
+          suggestionsList.classList.add('hidden');
+        }
+      } catch (e) {}
+    }
+
+    let fromTimeout, toTimeout;
+    addressFrom.addEventListener('input', () => { clearTimeout(fromTimeout); fromTimeout = setTimeout(() => fetchSuggestions(addressFrom.value.trim(), fromSuggestions), 300); });
+    addressTo.addEventListener('input', () => { clearTimeout(toTimeout); toTimeout = setTimeout(() => fetchSuggestions(addressTo.value.trim(), toSuggestions), 300); });
+
+    document.addEventListener('click', (e) => {
+      if (!document.getElementById('fromSection').contains(e.target)) fromSuggestions.classList.add('hidden');
+      if (!document.getElementById('toSection').contains(e.target)) toSuggestions.classList.add('hidden');
+    });
+
+    function updateCalcButton() {
+      if (distanceCalculated) {
+        calcPriceBtn.disabled = false;
+        calcPriceBtn.textContent = '🔍 Узнать цену';
+      } else {
+        calcPriceBtn.disabled = true;
+        calcPriceBtn.textContent = '🔍 Сначала рассчитайте расстояние';
+      }
+    }
+    updateCalcButton();
+
+    // ===== РАСЧЁТ РАССТОЯНИЯ =====
+    document.getElementById('calcDistanceBtn').addEventListener('click', async () => {
+      const lat1 = parseFloat(addressFrom.dataset.lat);
+      const lon1 = parseFloat(addressFrom.dataset.lon);
+      const lat2 = parseFloat(addressTo.dataset.lat);
+      const lon2 = parseFloat(addressTo.dataset.lon);
+
+      if (!addressFrom.value.trim() || !addressTo.value.trim()) { alert('Заполните оба адреса'); return; }
+      if (!lat1 || !lon1 || !lat2 || !lon2) { alert('Выберите адрес из выпадающего списка'); return; }
+
+      distanceDisplay.classList.add('hidden');
+      distanceLoading.classList.remove('hidden');
+      distanceCalculated = false;
+      updateCalcButton();
+
+      try {
+        const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=false`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+          currentDistance = Math.round(data.routes[0].distance / 1000);
+          distanceValue.textContent = currentDistance;
+          distanceDisplay.classList.remove('hidden');
+          distanceCalculated = true;
+          updateCalcButton();
+        } else {
+          throw new Error('Маршрут не найден');
+        }
+      } catch (e) {
+        alert('Не удалось рассчитать расстояние. Введите километры вручную.');
+        const existing = document.getElementById('manualKmBlock');
+        if (!existing) {
+          const manualInput = document.createElement('div');
+          manualInput.className = 'section';
+          manualInput.id = 'manualKmBlock';
+          manualInput.innerHTML = '<div class="label">⚠️ Введите расстояние вручную (км)</div><input type="number" id="manualKm" placeholder="15" min="0" step="0.1">';
+          document.getElementById('calcDistanceBtn').after(manualInput);
+          document.getElementById('manualKm').addEventListener('input', function() {
+            currentDistance = parseFloat(this.value) || 0;
+            distanceValue.textContent = currentDistance;
+            distanceDisplay.classList.remove('hidden');
+            distanceCalculated = true;
+            updateCalcButton();
+          });
+        }
+      }
+      distanceLoading.classList.add('hidden');
+    });
+
+    // ===== ФОРМУЛА ЦЕНЫ =====
+    function calculatePrice() {
+      const vehicleType = getSelectedValue('vehicleTypeGroup');
+      const position = getSelectedValue('positionGroup');
+      const towHook = getSelectedValue('towHookGroup');
+      const wheelsRoll = getSelectedValue('wheelsRollGroup');
+      const gearbox = getSelectedValue('gearboxGroup');
+      const neutral = getSelectedValue('neutralGroup');
+      const transportType = getSelectedValue('transportTypeGroup');
+      const distance = currentDistance;
+
+      let basePrice = 0, kmRate = 0;
+      switch (vehicleType) {
+        case 'Легковой': case 'Кроссовер': basePrice = 2500; kmRate = 100; break;
+        case 'Внедорожник': basePrice = 2800; kmRate = 100; break;
+        case 'Легкий коммерческий': basePrice = 3000; kmRate = 120; break;
+        case 'Трактор': basePrice = 3500; kmRate = 150; break;
+        default: basePrice = 2500; kmRate = 100;
+      }
+
+      let distanceCost = (transportType === 'По городу' || distance < 10) ? 0 : kmRate * distance;
+      let totalPrice = basePrice + distanceCost;
+      let extras = [], extraCost = 0;
+
+      if (towHook === 'Нет ничего') { extraCost += 300; extras.push('Нет буксировочного: +300₽'); }
+      if (wheelsRoll === 'Нет') { extraCost += 500; extras.push('Заблокировано колёс: +500₽'); }
+      if (gearbox !== 'Механика' && neutral === 'Нет') { extraCost += 500; extras.push('Не встаёт на нейтраль: +500₽'); }
+      if (position === 'В кювете') { extraCost += 2000; extras.push('В кювете: +2000₽'); }
+      else if (position === 'На боку' || position === 'На крыше') { extraCost += 3500; extras.push('На боку/крыше: +3500₽'); }
+
+      totalPrice += extraCost;
+      return { basePrice, distanceCost, extraCost, extras, totalPrice, distance };
+    }
+
+    function collectFormData() {
+      return {
+        name: document.getElementById('customerName').value.trim(),
+        phone: document.getElementById('customerPhone').value.trim(),
+        situation: getSelectedValue('situationGroup'),
+        transportType: getSelectedValue('transportTypeGroup'),
+        vehicleType: getSelectedValue('vehicleTypeGroup'),
+        position: getSelectedValue('positionGroup'),
+        damage: getSelectedValue('damageGroup'),
+        wheelsRoll: getSelectedValue('wheelsRollGroup'),
+        blockedWheels: getSelectedValue('wheelsRollGroup') === 'Нет' ? blockedWheelsCount.value : 'Нет',
+        gearbox: getSelectedValue('gearboxGroup'),
+        neutral: getSelectedValue('gearboxGroup') !== 'Механика' ? getSelectedValue('neutralGroup') : '—',
+        towHook: getSelectedValue('towHookGroup'),
+        time: getSelectedValue('timeGroup'),
+        customTime: getSelectedValue('timeGroup') === 'Ко времени' ? document.getElementById('customTimeInput').value : '—',
+        addressFrom: addressFrom.value.trim(),
+        addressTo: addressTo.value.trim(),
+        distance: currentDistance
+      };
+    }
+
+    // ===== КНОПКА "УЗНАТЬ ЦЕНУ" =====
+    calcPriceBtn.addEventListener('click', () => {
+      if (!distanceCalculated) { alert('Сначала рассчитайте расстояние!'); return; }
+
+      const formData = collectFormData();
+      const priceData = calculatePrice();
+
+      if (!formData.name || !formData.phone || !formData.situation || !formData.transportType || 
+          !formData.vehicleType || !formData.position || !formData.damage || !formData.wheelsRoll ||
+          !formData.gearbox || !formData.towHook || !formData.time || !formData.addressFrom || !formData.addressTo) {
+        alert('Пожалуйста, заполните все поля формы');
+        return;
+      }
+      if (formData.phone.replace(/\D/g, '').length < 11) { alert('Введите корректный номер телефона'); return; }
+
+      orderId = 'ORD-' + Date.now().toString(36).toUpperCase();
+      formContainer.style.display = 'none';
+      timerBlock.classList.remove('hidden');
+      let seconds = 60;
+      timerCount.textContent = seconds;
+      timerStatus.textContent = 'секунд. Ожидайте ответ...';
+
+      const timerInterval = setInterval(() => {
+        seconds--;
+        timerCount.textContent = seconds;
+        if (seconds <= 0) { clearInterval(timerInterval); timerStatus.textContent = 'секунд. Ожидайте подтверждение...'; }
+      }, 1000);
+
+      sendToTelegram(formData, priceData, timerInterval);
+    });
+
+    // ===== ОТПРАВКА В TELEGRAM (через Netlify Function) =====
+    async function sendToTelegram(formData, priceData, timerInterval) {
+      const message = `🚛 *НОВЫЙ ЗАКАЗ #${orderId}*\n\n👤 *Клиент:* ${formData.name}\n📞 *Телефон:* ${formData.phone}\n🚨 *Ситуация:* ${formData.situation}\n📍 *Перевозка:* ${formData.transportType}\n🚗 *Тип ТС:* ${formData.vehicleType}\n🚙 *Положение:* ${formData.position}\n🔧 *Неисправность:* ${formData.damage}\n🛞 *Колёса крутятся:* ${formData.wheelsRoll}\n🔒 *Заблокировано колёс:* ${formData.blockedWheels}\n⚙️ *КПП:* ${formData.gearbox}\n⚡ *Нейтраль:* ${formData.neutral}\n🪝 *Буксировка:* ${formData.towHook}\n⏱️ *Время подачи:* ${formData.time} ${formData.customTime !== '—' ? formData.customTime : ''}\n📍 *Откуда:* ${formData.addressFrom}\n📌 *Куда:* ${formData.addressTo}\n🗺️ *Расстояние:* ${formData.distance} км\n\n💰 *РАСЧЁТ СТОИМОСТИ:*\nБазовая ставка: ${priceData.basePrice}₽\nКилометраж: ${priceData.distanceCost}₽\nДоплаты: ${priceData.extraCost}₽\n${priceData.extras.join('\n')}\n\n💎 *ИТОГО: ${priceData.totalPrice}₽*`;
+
+      const inlineKeyboard = {
+        inline_keyboard: [
+          [{ text: '✅ Подтвердить заказ', callback_data: `confirm_${orderId}` }, { text: '💸 Изменить сумму', callback_data: `editprice_${orderId}` }],
+          [{ text: '❌ Отменить заказ', callback_data: `cancel_${orderId}` }]
+        ]
+      };
+
+      try {
+        const response = await fetch('/.netlify/functions/send-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: message, parse_mode: 'Markdown', reply_markup: inlineKeyboard })
+        });
+        const data = await response.json();
+        if (data.ok) {
+          startPolling(data.result.message_id, priceData, timerInterval);
+        } else {
+          alert('Ошибка: ' + data.description);
+          showFinalPrice(priceData, timerInterval);
+        }
+      } catch (err) {
+        alert('Ошибка соединения.');
+        showFinalPrice(priceData, timerInterval);
+      }
+    }
+
+    // ===== ОПРОС ПОДТВЕРЖДЕНИЯ (через Netlify Function) =====
+    function startPolling(messageId, priceData, timerInterval) {
+      let attempts = 0;
+      const pollInterval = setInterval(async () => {
+        attempts++;
+        try {
+          const res = await fetch('/.netlify/functions/check-order');
+          const data = await res.json();
+          if (data.ok && data.result && data.result.length > 0) {
+            const lastUpdate = data.result[data.result.length - 1];
+            if (lastUpdate.callback_query && lastUpdate.callback_query.message.message_id === messageId) {
+              const cb = lastUpdate.callback_query;
+              if (cb.data.startsWith('confirm_')) {
+                clearInterval(pollInterval);
+                showFinalPrice(priceData, timerInterval);
+                answerCallback(cb.id, '✅ Заказ подтверждён!');
+                sendTgMsg('✅ *Заказ #' + orderId + ' подтверждён!* Цена: ' + priceData.totalPrice + '₽');
+              } else if (cb.data.startsWith('editprice_')) {
+                answerCallback(cb.id, 'Введите новую цену в чат (только число). Например: 5000');
+                waitForPrice(messageId, priceData, timerInterval, pollInterval);
+              } else if (cb.data.startsWith('cancel_')) {
+                clearInterval(pollInterval);
+                clearInterval(timerInterval);
+                timerBlock.classList.add('hidden');
+                formContainer.style.display = 'block';
+                answerCallback(cb.id, '❌ Заказ отменён');
+                sendTgMsg('❌ *Заказ #' + orderId + ' отменён владельцем.*');
+              }
+            }
+          }
+        } catch (e) {}
+        if (attempts >= 80) {
+          clearInterval(pollInterval);
+          showFinalPrice(priceData, timerInterval);
+        }
+      }, 3000);
+    }
+
+    function waitForPrice(messageId, priceData, timerInterval, pollInterval) {
+      let waitAttempts = 0;
+      const waitInterval = setInterval(async () => {
+        waitAttempts++;
+        try {
+          const res = await fetch('/.netlify/functions/check-order');
+          const data = await res.json();
+          if (data.ok && data.result && data.result.length > 0) {
+            const lastUpdate = data.result[data.result.length - 1];
+            if (lastUpdate.message && lastUpdate.message.text && lastUpdate.message.chat.id.toString() === CHAT_ID) {
+              const newPrice = parseInt(lastUpdate.message.text.trim());
+              if (!isNaN(newPrice) && newPrice > 0) {
+                clearInterval(waitInterval);
+                clearInterval(pollInterval);
+                showFinalPrice({ ...priceData, totalPrice: newPrice }, timerInterval);
+                sendTgMsg('✅ *Цена изменена!* Новая сумма: ' + newPrice + '₽');
+              }
+            }
+          }
+        } catch (e) {}
+        if (waitAttempts >= 30) {
+          clearInterval(waitInterval);
+          showFinalPrice(priceData, timerInterval);
+          sendTgMsg('⏰ Время вышло. Клиент видит исходную цену: ' + priceData.totalPrice + '₽');
+        }
+      }, 3000);
+    }
+
+    function answerCallback(id, text) {
+      fetch('/.netlify/functions/answer-callback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ callback_query_id: id, text: text })
+      });
+    }
+
+    function sendTgMsg(text) {
+      fetch('/.netlify/functions/send-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text, parse_mode: 'Markdown' })
+      });
+    }
+
+    function showFinalPrice(priceData, timerInterval) {
+      if (timerInterval) clearInterval(timerInterval);
+      timerBlock.classList.add('hidden');
+      finalPriceBlock.innerHTML = `
+        <div class="price-block">
+          <div style="font-size:1rem; color:#BCCCDC;">Стоимость эвакуации</div>
+          <div class="price-amount">${priceData.totalPrice} ₽</div>
+          <div class="price-breakdown">
+            База: ${priceData.basePrice}₽<br>
+            Километраж: ${priceData.distanceCost}₽<br>
+            Доплаты: ${priceData.extraCost}₽
+            ${priceData.extras.length ? '<br>' + priceData.extras.join('<br>') : ''}
+          </div>
+        </div>
+        <button class="btn-success" onclick="window.location.href='tel:${MY_PHONE}'">✅ Устраивает! Позвонить водителю</button>
+        <button class="btn-danger" id="clientCancelBtn">❌ Отказаться от заказа</button>
+      `;
+      finalPriceBlock.classList.remove('hidden');
+
+      document.getElementById('clientCancelBtn').addEventListener('click', async () => {
+        await sendTgMsg('❌ *Клиент отказался от заказа #' + orderId + '*\nЗаказ отменён клиентом после показа цены.');
+        alert('Заказ отменён. Спасибо за обращение!');
+        location.reload();
+      });
+    }
+  })();
+</script>
